@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="websocket.chat.login.dao.LoginDao">
+
+    <resultMap id="resultData" type="websocket.chat.login.vo.LoginSessionVO">
+        <result property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" javaType="int" jdbcType="INTEGER"/>
+        <result property="sessionId" column="session_id" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="status" column="status" javaType="int" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" javaType="int" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <update id="updateStatusByUserId">
+        UPDATE websocket_chat_login SET status=#{status} WHERE user_id={userId} AND del_flag=0
+    </update>
+
+    <update id="updateSessionIdStatusByUserId">
+        UPDATE websocket_chat_login SET session_id=#{sessionId},status=#{status} WHERE user_id=#{userId} AND del_flag=0
+    </update>
+
+    <select id="getLoginSessionByUserId" resultMap="resultData">
+        SELECT id,user_id,session_id,status,create_time,update_time,del_flag FROM websocket_chat_login WHERE user_id=#{userId} AND del_flag=0
+    </select>
+
+    <insert id="insert">
+        INSERT INTO websocket_chat_login (id,user_id,session_id,status,create_time,update_time,del_flag)
+        VALUES (#{loginSession.id},#{loginSession.userId},#{loginSession.sessionId},#{loginSession.status},#{loginSession.createTime},#{loginSession.updateTime},#{loginSession.delFlag})
+    </insert>
+
+    <select id="getLoginSessionBySessionId" resultMap="resultData">
+        SELECT id,user_id,session_id,status,create_time,update_time,del_flag FROM websocket_chat_login WHERE session_id=#{sessionId} AND del_flag=0
+    </select>
+
+</mapper>
