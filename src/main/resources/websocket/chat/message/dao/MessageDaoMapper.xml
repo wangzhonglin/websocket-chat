@@ -31,4 +31,14 @@
         SELECT COUNT(1) FROM websocket_chat_messages WHERE session_id=#{sessionId} AND status=0 AND del_flag=0
     </select>
 
+    <select id="getHistoryMessageList" resultMap="resultData">
+        SELECT id,session_id,sender_user_id,receiver_user_id,message_type,content,status,create_time,update_time,del_flag FROM websocket_chat_messages
+        WHERE session_id=#{sessionId} AND id&lt;#{lastMessageId} AND del_flag=0 ORDER BY id DESC limit #{limit}
+    </select>
+
+    <select id="getHistoryMessageListWithoutLastMessageId" resultMap="resultData">
+        SELECT id,session_id,sender_user_id,receiver_user_id,message_type,content,status,create_time,update_time,del_flag FROM websocket_chat_messages
+        WHERE session_id=#{sessionId} AND del_flag=0 ORDER BY id DESC limit #{limit}
+    </select>
+
 </mapper>

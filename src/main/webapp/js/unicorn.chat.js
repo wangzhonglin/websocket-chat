@@ -32,7 +32,10 @@ $(document).ready(function(){
 		else if(jsonWebSocketMsg.method=='method_push'){
 			var data=jsonWebSocketMsg.data;
 			if(data.sessionId==sessionId){
-				add_message(data.friendNickname,'images/demo/av1.jpg',data.content,false);
+				add_message(sessionId,data.friendNickname,'images/demo/av1.jpg',data.content,false);
+			}else{
+				add_hidden_chat_session_inner(data.sessionId);
+				add_message(data.sessionId,data.friendNickname,'images/demo/av1.jpg',data.content,false);
 			}
 		}
 	}
@@ -52,13 +55,15 @@ $(document).ready(function(){
 	}
 
 	var loginSessionId;
-	var sessionId = 1;
+	var sessionId;
 	var userId;
 	var userName;
 	var userNickname;
-	var friendId = 15;
+	var friendId;
 	var method_send = "method_send";
 	var method_login="method_login";
+	var host_domain="127.0.0.1:8080";
+	var online_focus_session;
 
 	function checkCookies() {
 		var data = getCookies();
@@ -73,6 +78,7 @@ $(document).ready(function(){
 			userId = jsonData.userId;
 			userName = jsonData.name;
 			userNickname = jsonData.nickname;
+			$('#login-user-nickname').append(userNickname);
 		}
 	} checkCookies();
 
@@ -109,7 +115,7 @@ $(document).ready(function(){
 		var input = $(this).siblings('span').children('input[type=text]');		
 		if(input.val() != ''){
 			sendNormalMsg(input.val());
-			add_message('You','images/demo/av1.jpg',input.val(),true);
+			add_message(sessionId,'我','images/demo/av1.jpg',input.val(),true);
 		}
 	});
 
@@ -117,24 +123,27 @@ $(document).ready(function(){
 		if(e.which == 13) {	
 			if($(this).val() != ''){
 				sendNormalMsg($(this).val());
-				add_message('You','images/demo/av1.jpg',$(this).val(),true);
+				add_message(sessionId,'我','images/demo/av1.jpg',$(this).val(),true);
 			}
 		}
 	});
 	
 	setTimeout(function(){
-			add_message('Neytiri','images/demo/av1.jpg','I have a problem. My computer not work!')
+			add_message(0,'Neytiri','images/demo/av1.jpg','I have a problem. My computer not work!')
 		},'6000');
 	setTimeout(function(){
-			add_message('Cartoon Man','images/demo/av1.jpg','Turn off and turn on your computer then see result.')
+			add_message(0,'Cartoon Man','images/demo/av1.jpg','Turn off and turn on your computer then see result.')
 		},'11000');
 	setTimeout(function(){
             remove_user('neytiri','Neytiri')
         },'13500');
    	var i = 0;
-	function add_message(name,img,msg,clear) {
+	function add_message(sessionId,name,img,msg,clear) {
+		if(sessionId==null||sessionId==''||sessionId==0||friendId==null||friendId==''||friendId==0){return false;}
 		i = i + 1;
-		var  inner = $('#chat-messages-inner');
+		var inner;
+		if(sessionId==null){inner = $('#chat-messages-inner');}
+		else{inner=$('.chat-messages div[data-session-id$='+sessionId+']')}
 		var time = new Date();
 		var hours = time.getHours();
 		var minutes = time.getMinutes();
@@ -164,12 +173,14 @@ $(document).ready(function(){
     }
 
 	var contact_list1=$('.contact-list1');
-	contact_list1.on('click','li i',function(){
-		$(this).parent().slideUp(function(){
+	contact_list1.on('click','li i',function(e){
+		e.stopPropagation();
+		$(this).parent().removeClass().addClass('offline').slideUp(function(){
+			if($(this)==online_focus_session){online_focus_session=null;}
 			$(this).remove();
 			sessionId=$(this).attr('data-session-id');
 			$.ajax({
-				url: "http://127.0.0.1:8080/websocket/chat/api/deleteSession",
+				url: "http://"+host_domain+"/websocket/chat/api/deleteSession",
 				data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+'}',
 				dataType: "jsonp",
 				jsonpCallback: 'success_jsonpCallback',
@@ -182,10 +193,13 @@ $(document).ready(function(){
 		});
 	});
 	contact_list1.on('click','li',function(){
-		$(this).removeClass().addClass('online');
+		if(online_focus_session!=null){online_focus_session.removeClass().addClass('online');}
+		online_focus_session=$(this);
+		$(this).removeClass().addClass('online-click');
 		$(this).find('.msg-count').remove();
 		sessionId=$(this).attr('data-session-id');
 		friendId=$(this).attr('data-friend-id');
+		add_chat_session_inner(sessionId);
 	});
 
 	function add_session(sessionId,friendId,userNickname,unreadMsgCount,img,class_name) {
@@ -195,11 +209,38 @@ $(document).ready(function(){
 		newSession='<li class="'+class_name+'" data-session-id="'+sessionId+'" data-friend-id="'+friendId+'"><a><img src="'+img+'" alt="" /> <span>'+userNickname+'</span></a><span class="msg-count badge badge-info-msg'+msg_hidden_tail+'">'+unreadMsgCount+'</span><i class="icon-close"></i></li>';
 		if(class_name=='offline'){$(newSession).hide().prependTo($('#session_list')).slideDown(800);}
 		else{$(newSession).prependTo($('#session_list'));}
+		return $(newSession);
+	}
+
+	function add_hidden_chat_session_inner(sessionId){
+		var chat_session_inner=' <div id="chat-messages-inner" data-session-id="'+sessionId+'"> <div class="chat-messages-more"> <a class="chat-messages-click"><span>查看更多消息</span></a> </div> </div>';
+		$(chat_session_inner).hide().appendTo($('.chat-messages'));
+	}
+
+	function add_chat_session_inner(sessionId){
+		var chat_messages=$('.chat-messages');
+		var is_chat_session_inner_already_contained=false;
+		chat_messages.find('div').each(function(i){
+			if(i%2==0) {
+				var data_session_id = $(this).attr('data-session-id');
+				if (data_session_id == sessionId) {
+					is_chat_session_inner_already_contained = true;
+					$(this).show();
+				}
+				else {
+					$(this).hide();
+				}
+			}
+		});
+		if(is_chat_session_inner_already_contained==false){
+			var chat_session_inner=' <div id="chat-messages-inner" data-session-id="'+sessionId+'"> <div class="chat-messages-more"> <a class="chat-messages-click"><span>查看更多消息</span></a> </div> </div>';
+			$(chat_session_inner).appendTo(chat_messages);
+		}
 	}
 
 	function initSessionList() {
 		$.ajax({
-			url: "http://127.0.0.1:8080/websocket/chat/api/getLatestSessionList",
+			url: "http://"+host_domain+"/websocket/chat/api/getLatestSessionList",
 			data: 'd={"loginSessionId":"' + loginSessionId + '","userId":'+ userId + '}',
 			dataType: "jsonp",
 			jsonpCallback: 'success_jsonpCallback',
@@ -210,9 +251,15 @@ $(document).ready(function(){
 					// init false.
 				} else {
 					var latestSessionList = jsonResult.data.latestSessionList;
+					var newSession=null;
 					$.each(latestSessionList,function(i,eachSession){
-						add_session(eachSession.sessionId,eachSession.friendId,eachSession.friendNickname,0,'images/demo/av1.jpg','online');
+						newSession=add_session(eachSession.sessionId,eachSession.friendId,eachSession.friendNickname,0,'images/demo/av1.jpg','online');
 					});
+					if(newSession!=null){
+						sessionId=newSession.attr('data-session-id');
+						friendId=newSession.attr('data-friend-id');
+						add_chat_session_inner(sessionId);
+					}
 				}
 			},
 			error:function(XMLHttpRequest, textStatus, errorThrown){

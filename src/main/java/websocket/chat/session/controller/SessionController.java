@@ -29,16 +29,16 @@ public class SessionController extends BaseController {
     public String getLatestSessionList(@Param("d") String d, @Param("cb") String cb) {
         LatestSessionListRequest request = JsonUtil.safelyParseObject(d, LatestSessionListRequest.class);
         if (request == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "参数错误", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
         if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
-            ApiResponse apiResponse = ApiResponse.create(false, "用户未登录", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
 
         LatestSessionListResponse response = sessionService.getLatestSessionList(request.getUserId());
-        ApiResponse<LatestSessionListResponse> apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, response);
+        ApiResponse<LatestSessionListResponse> apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, response);
         return toJson(apiResponse, cb);
     }
 
@@ -46,16 +46,16 @@ public class SessionController extends BaseController {
     public String deleteSession(@Param("d") String d, @Param("cb") String cb) {
         DeleteSessionRequest request = JsonUtil.safelyParseObject(d, DeleteSessionRequest.class);
         if (request == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "参数错误", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
         if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
-            ApiResponse apiResponse = ApiResponse.create(false, "用户未登录", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
 
         sessionService.deleteSession(request.getSessionId());
-        ApiResponse<LatestSessionListResponse> apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, null);
+        ApiResponse<LatestSessionListResponse> apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }
 }

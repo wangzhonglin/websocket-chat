@@ -53,7 +53,6 @@ public class MessageServiceHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         websocketChannelManager.socketClosed(ctx);
-        ctx.close();
     }
 
     @Override

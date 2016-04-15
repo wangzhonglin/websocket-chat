@@ -37,7 +37,9 @@ a:hover {
 #header h1 a {
     display: block;
 }
-
+#content-header {
+	font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
+}
 /* Search input */
 #search {
 	position: absolute;
@@ -635,6 +637,7 @@ a:hover {
     margin-top: 16px;
     margin-bottom: 16px;
     position: relative;
+	font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
 }
 .widget-box.widget-calendar, .widget-box.widget-chat {
     overflow:hidden !important;
@@ -900,6 +903,7 @@ a:hover {
 	padding: 10px;
 	height: 515px;
 	overflow: auto;
+	font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
 }
 .chat-content {
 	height: 560px;
@@ -923,6 +927,27 @@ a:hover {
 .chat-message .input-box {
     display: block;
     margin-right: 90px;
+}
+.chat-messages .chat-messages-more {
+	text-align: center;
+	margin-top: 12px;
+}
+.chat-messages .chat-messages-more .chat-messages-click{display: inline-block;
+	margin-bottom: 0;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	white-space: nowrap;
+	padding: 4px 13px;
+	border-radius: 4px;
+	-moz-user-select: none;
+	background-color: #FFF;
+	border-color: #D9D9D9;
+	color: #444444;
+	position: relative;
+	font-size: 12px;
+	font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
+	font-weight: bold;
 }
 .chat-message button {
 	float: right;
@@ -1057,14 +1082,12 @@ a:hover {
 	padding: 8px 5px;
 }
 .chat-users .contact-list1 li.online a {
-	font-weight: bold;
-}
-.chat-users .contact-list1 li.new {
-	background-color: #eaeaea;
 }
 .chat-users .contact-list1 li.offline {
 	background-color: #EDE0E0;
-	font-weight: bold;
+}
+.chat-users .contact-list1 li.online-click {
+	background-color: #efefef;
 }
 .chat-users .contact-list1 li a img {
 	display: inline-block;

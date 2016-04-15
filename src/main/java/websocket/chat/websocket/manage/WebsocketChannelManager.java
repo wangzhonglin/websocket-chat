@@ -40,7 +40,9 @@ public class WebsocketChannelManager {
             lock.lock();
             ChannelHandlerContext oldChannel = userChannelMap.get(userId);
             if (oldChannel != null) {
-                socketClosed(oldChannel);
+                userChannelMap.remove(userId);
+                channelUserMap.remove(oldChannel);
+                oldChannel.close();
             }
             userChannelMap.put(userId, ctx);
             channelUserMap.put(ctx, userId);
@@ -68,6 +70,7 @@ public class WebsocketChannelManager {
             LOG.error("delete socket session map error.", e);
         } finally {
             lock.unlock();
+            ctx.close();
         }
     }
 

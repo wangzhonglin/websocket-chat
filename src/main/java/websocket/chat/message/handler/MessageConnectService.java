@@ -35,22 +35,22 @@ public class MessageConnectService extends MessageBaseService {
         ConnectRequest connectRequest = JsonUtil.safelyParseObject(requestVO.getRequest(), ConnectRequest.class);
         if (connectRequest == null) {
             LOG.info("Cannot login, bad request. {}", requestVO);
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, "登录验证失败"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, Constant.NULL_PARAM_MESSAGE));
         }
 
         UserStatusEnum status = UserStatusEnum.byte2Enum((byte) connectRequest.getStatus());
         if (status == null) {
             LOG.info("Wrong type of status, requestVO={}", requestVO);
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, "登录验证失败"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, Constant.NULL_PARAM_MESSAGE));
         }
 
         if (!loginService.checkLogin(requestVO.getLoginSessionId(), connectRequest.getUserId())) {
             LOG.info("验证sessionId, userId失败, requestVO={}", requestVO);
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, "登录验证失败"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, Constant.USER_NOT_LOGIN_MESSAGE));
         }
 
         loginService.updateUserStatus(connectRequest.getUserId(), status);
         websocketChannelManager.socketCreated(connectRequest.getUserId(), ctx);
-        return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, true, "OK"));
+        return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, true, Constant.SUCCESS_MESSAGE));
     }
 }

@@ -3,6 +3,7 @@ package websocket.chat.session.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import websocket.chat.constant.SessionStatusEnum;
 import websocket.chat.message.service.MessageService;
 import websocket.chat.message.vo.MessageVO;
 import websocket.chat.session.dao.SessionDao;
@@ -13,6 +14,7 @@ import websocket.chat.user.vo.UserVO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * SessionServiceImpl
@@ -60,7 +62,9 @@ public class SessionServiceImpl implements SessionService {
             return response;
         }
 
-        sessionList.sort((a, b) -> Long.compare(b.getUpdateTime().getTime(), a.getUpdateTime().getTime()));
+        sessionList = sessionList.stream().filter(sessionVO -> sessionVO.getStatus()!=SessionStatusEnum.CLOSED.value)
+                .sorted((a, b) -> Long.compare(b.getUpdateTime().getTime(), a.getUpdateTime().getTime()))
+                .collect(Collectors.toList());
 
         for (SessionVO sessionVO : sessionList) {
             LatestSessionListResponse.EachSession eachSession = new LatestSessionListResponse.EachSession();
@@ -88,6 +92,6 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public int deleteSession(int sessionId) {
-        return sessionDao.updateSessionStatusById(sessionId);
+        return sessionDao.updateSessionStatusById(sessionId, SessionStatusEnum.CLOSED.value);
     }
 }

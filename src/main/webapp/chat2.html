@@ -53,7 +53,7 @@
 		
 		<div id="content">
 			<div id="content-header">
-				<h1>Michelle</h1>
+				<h1 id="login-user-nickname"></h1>
 			</div>
 			<div class="container-fluid">
 				<div class="row-fluid">
@@ -68,8 +68,12 @@
 							<div class="widget-content nopadding">
 								<div class="chat-content panel-left">                   
 								   <div class="chat-messages" id="chat-messages">
-										<div id="chat-messages-inner"></div>
-								   </div>									
+										<div id="chat-messages-inner" data-session-id="0">
+											<div class="chat-messages-more">
+												<a class="chat-messages-click"><span>查看更多消息</span></a>
+											</div>
+										</div>
+								   </div>
 								   <div class="chat-message well">
 										<button id="sendMsg" class="btn btn-success"> 发送</button>
 										<span class="input-box">

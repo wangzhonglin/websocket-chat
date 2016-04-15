@@ -1,5 +1,6 @@
 package websocket.chat.message.service;
 
+import websocket.chat.message.vo.HistoryMessageListResponse;
 import websocket.chat.message.vo.MessageVO;
 
 /**
@@ -15,4 +16,6 @@ public interface MessageService {
     MessageVO getLastMessage(int sessionId);
 
     int getUnreadMsgCount(int sessionId);
+
+    HistoryMessageListResponse getHistoryMessageResponse(int sessionId, int limit, int lastMessageId);
 }

@@ -38,7 +38,7 @@ public class LoginController extends BaseController {
     public String login(@Param("d") String d, @Param("cb") String cb) {
         LoginVO loginVO = JsonUtil.safelyParseObject(d, LoginVO.class);
         if (loginVO == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "登录失败, 参数为空！", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
         LoginResponse loginResponse = loginService.login(loginVO);
@@ -47,7 +47,7 @@ public class LoginController extends BaseController {
             return toJson(apiResponse, cb);
         }
 
-        ApiResponse apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, loginResponse);
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, loginResponse);
         return toJson(apiResponse, cb);
     }
 
@@ -55,7 +55,7 @@ public class LoginController extends BaseController {
     public String register(@Param("d") String d, @Param("cb") String cb) {
         RegisterVO registerVO = JsonUtil.safelyParseObject(d, RegisterVO.class);
         if (registerVO == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "注册失败, 参数为空！", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse);
         }
         UserVO userVO = new UserVO();
@@ -69,7 +69,7 @@ public class LoginController extends BaseController {
         int userId = userService.createUser(userVO);
         JSONObject rsp = new JSONObject();
         rsp.put("userId", userId);
-        ApiResponse apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, rsp);
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, rsp);
         return toJson(apiResponse, cb);
     }
 

@@ -29,16 +29,16 @@ public class UserController extends BaseController {
     public String addFriend(@Param("d") String d, @Param("cb") String cb) {
         AddFriendRequest request = JsonUtil.safelyParseObject(d, AddFriendRequest.class);
         if (request == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "添加好友失败, 参数为空！", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
         if (!checkLogin(request.getLoginSessionId(), request.getSenderUserId())) {
-            ApiResponse apiResponse = ApiResponse.create(false, "添加好友失败, 用户未登录！", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
 
         userService.addFriend(request.getSenderUserId(), request.getReceiverUserId());
-        ApiResponse apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, null);
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }
 
@@ -46,16 +46,16 @@ public class UserController extends BaseController {
     public String deleteFriend(@Param("d") String d, @Param("cb") String cb) {
         DeleteFriendRequest request = JsonUtil.safelyParseObject(d, DeleteFriendRequest.class);
         if (request == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "参数为空", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
         if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
-            ApiResponse apiResponse = ApiResponse.create(false, "用户未登录", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
 
         userService.deleteFriend(request.getUserId(), request.getFriendId());
-        ApiResponse apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, null);
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }
 
@@ -63,16 +63,16 @@ public class UserController extends BaseController {
     public String getFriendList(@Param("d") String d, @Param("cb") String cb) {
         FriendListRequest request = JsonUtil.safelyParseObject(d, FriendListRequest.class);
         if (request == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "参数为空", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
         if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
-            ApiResponse apiResponse = ApiResponse.create(false, "用户未登录", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
 
         userService.getFriendListByUserId(request.getUserId());
-        ApiResponse apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, null);
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }
 
@@ -80,16 +80,16 @@ public class UserController extends BaseController {
     public String searchUser(@Param("d") String d, @Param("cb") String cb) {
         SearchUserRequest request = JsonUtil.safelyParseObject(d, SearchUserRequest.class);
         if (request == null) {
-            ApiResponse apiResponse = ApiResponse.create(false, "参数为空", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
         if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
-            ApiResponse apiResponse = ApiResponse.create(false, "用户未登录", Constant.ERROR_CODE, null);
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
         }
 
         UserListResponse response = userService.searchUser(request.getKeyword());
-        ApiResponse apiResponse = ApiResponse.create(true, "SUCCESS", Constant.SUCCESS_CODE, response);
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, response);
         return toJson(apiResponse, cb);
     }
 }

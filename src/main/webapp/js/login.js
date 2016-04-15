@@ -57,6 +57,7 @@ function getParam(pname) {
 
 var reMethod = "GET",
 	pwdmin = 6;
+var host_domain="127.0.0.1:8080";
 
 $(document).ready(function() {
 
@@ -89,7 +90,7 @@ $(document).ready(function() {
 		}
 
 		$.ajax({
-			url: "http://127.0.0.1:8080/websocket/chat/api/login",
+			url: "http://"+host_domain+"/websocket/chat/api/login",
 			data: 'd={"userId":"' + $("#login_userId").val() + '","password":"'+ $("#login_password").val() + '"}',
 			dataType: "jsonp",
 			jsonpCallback: 'success_jsonpCallback',
@@ -148,7 +149,7 @@ $(document).ready(function() {
 		}
 
 		$.ajax({
-			url: "http://127.0.0.1:8080/websocket/chat/api/register",
+			url: "http://"+host_domain+"/websocket/chat/api/register",
 			// 暂时只有用户昵称, 用户姓名 = 昵称
 			data: 'd={"username":"' + $("#reg_username").val() + '","password":"'+ $("#reg_passwd").val() + '","userNickname":"'+ $("#reg_username").val() + '"}',
 			dataType: "jsonp",
