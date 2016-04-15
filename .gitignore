@@ -1,0 +1,13 @@
+### IDEA project files
+.idea
+*.iml
+*.ipr
+*.iws
+
+### Gradle template
+.gradle
+/out
+/classes
+build/
+out/
+ServiceTreeInfo/
