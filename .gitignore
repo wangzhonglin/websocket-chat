@@ -1,5 +1,6 @@
 ### IDEA project files
 .idea
+.idea/
 *.iml
 *.ipr
 *.iws
