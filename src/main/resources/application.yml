@@ -1,0 +1,23 @@
+# Database configuration
+druid:
+  datasource:
+    driverClass: com.mysql.jdbc.Driver
+    mapperLocations: classpath*:websocket/chat/**/*Mapper.xml
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/websocket_chat
+    username: root
+    password: 123456
+
+server:
+  contextPath: /websocket/chat
+
+# Netty configuration
+nettyServerConfig:
+  serverIp: localhost
+  serverPort: 8888
+  bossThread: 10
+  workThread: 200
+
+# ActiveMQ with default configuration
+spring:
+  activemq:
+    broker-url: tcp://localhost:61616

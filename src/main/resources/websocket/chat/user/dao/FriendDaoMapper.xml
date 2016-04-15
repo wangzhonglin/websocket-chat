@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="websocket.chat.user.dao.FriendDao">
+
+    <resultMap id="resultData" type="websocket.chat.user.vo.FriendVO">
+        <result property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+        <result property="senderUserId" column="sender_user_id" javaType="int" jdbcType="INTEGER"/>
+        <result property="receiverUserId" column="receiver_user_id" javaType="int" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" javaType="int" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO websocket_chat_friends (sender_user_id,receiver_user_id,create_time,update_time,del_flag)
+        VALUES (#{friend.senderUserId},#{friend.receiverUserId},#{friend.createTime},#{friend.updateTime},#{friend.delFlag})
+    </insert>
+
+    <update id="delete">
+        UPDATE websocket_chat_friends SET del_flag=1 WHERE sender_user_id=#{senderUserId} AND receiver_user_id=#{receiverUserId} AND del_flag=0
+    </update>
+    
+    <select id="getReceiverUserIdListBySenderUserId" resultType="int">
+        SELECT receiver_user_id FROM websocket_chat_friends WHERE sender_user_id=#{senderUserId} AND del_flag=0
+    </select>
+
+    <select id="getSenderUserIdListByReceiverUserId" resultType="int">
+        SELECT sender_user_id FROM websocket_chat_friends WHERE receiver_user_id=#{receiverUserId} AND del_flag=0
+    </select>
+
+</mapper>

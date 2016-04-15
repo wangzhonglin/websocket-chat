@@ -1,0 +1,1094 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="http://img4.tuniucdn.com/w/j/20150130/common/tac.js,common/ga.js"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+
+    function taHeaderFunc() {
+        var tuniuTracker = _tat.getTracker();
+        tuniuTracker.setPageName("http://xchat.tuniu.org/manager/onlineChat?debug=true");
+        tuniuTracker.addOrganic("www.so.com","u");
+        tuniuTracker.addOrganic("www.so.com","q");
+        tuniuTracker.addOrganic("so.360.cn","u");
+        tuniuTracker.addOrganic("so.360.cn","q");
+        tuniuTracker.addOrganic("baidu.com","w");
+        tuniuTracker.addOrganic("baidu.com","q1");
+        tuniuTracker.addOrganic("baidu.com","q2");
+        tuniuTracker.addOrganic("baidu.com","q3");
+        tuniuTracker.addOrganic("baidu.com","q4");
+        tuniuTracker.addOrganic("baidu.com","q5");
+        tuniuTracker.addOrganic("baidu.com","q6");
+        tuniuTracker.addOrganic("m.so.com", "q");
+        tuniuTracker.addOrganic("m.sogou.com", "keyword");
+        tuniuTracker.addOrganic("wap.sogou.com", "keyword");
+        tuniuTracker.addOrganic("wap.soso.com", "key");
+        tuniuTracker.addOrganic("m.yisou.com", "q");
+		tuniuTracker.addOrganic("m.sm.cn", "q");
+    	tuniuTracker.addOrganic("sm.cn", "q"); 
+        tuniuTracker.trackPageView();
+        tuniuTracker.enableLinkTracking();
+    }
+/*]]>*/
+</script>
+<title>途牛旅游网</title>
+<meta name="keywords" content="途牛旅游网" />
+<meta name="description" content="途牛旅游网" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="MobileOptimized" content="width" />
+<meta id="viewport" content="width=device-width, user-scalable=no, initial-scale=1" name="viewport" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-retina.png">
+<script type="text/javascript">
+    var viewPortScale;
+    var dpr = window.devicePixelRatio;
+    viewPortScale = 0.5;
+    //
+    var detectBrowser = function(name) {
+        if(navigator.userAgent.toLowerCase().indexOf(name) > -1) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    var width = parseInt(window.screen.width);
+    if(detectBrowser("mz-m2")||detectBrowser("m2 note")||detectBrowser("mz-mx5")||detectBrowser("mz-mx6")||detectBrowser("mx4")) width = window.outerWidth;
+    var scale = width/640;
+    var userScalable = 'no';
+    if(detectBrowser("qq/")) userScalable = 'yes';
+    document.getElementById('viewport').setAttribute(
+    'content', 'target-densitydpi=device-dpi,width=640,user-scalable='+userScalable+',initial-scale=' + scale);
+    var turnToWebUrl='http://www.tuniu.com/';
+
+	var globalCheckIsInWebview = function () {
+		var checkDeviceType = document.cookie.match(new RegExp('(^| )deviceType=([^;]*)(;|$)'));
+		if (checkDeviceType && checkDeviceType[2] && (checkDeviceType[2] == '0' || checkDeviceType[2] == '1')) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
+    // 在head中请求`getCurrentCityInfoAjax`
+    (function() {
+        /**
+         * criteo
+         * @author yinqian@tuniu.com
+         * @update 2015-06-02 14:00:18
+         */
+        var criteoHeaderFunc = function() {
+            var criteoScript = document.createElement("script");
+            criteoScript.type = 'text/javascript';
+            criteoScript.src = '//static.criteo.net/js/ld/ld.js';
+            document.querySelector('head').appendChild(criteoScript);
+        };
+
+        var gaStatus = {
+            loaded: false,
+            cityName: ""
+        };
+        window.addEventListener("load", function() {
+            gaStatus.loaded = true;
+            if (gaStatus.cityName) {
+                gaHeaderFunc && gaHeaderFunc(gaStatus.cityName, {
+                    isWebview: globalCheckIsInWebview() ? 'true' : 'false',
+                });
+            }
+
+            if (window.criteo_q) {
+                criteoHeaderFunc();
+            }
+        }, false);
+        var elAjaxUrl = 'http://xchat.tuniu.org/site/getCurrentCityInfoAjax';
+
+        try {
+            var hash = window.location.hash.replace(/^#/,''),
+                request = new XMLHttpRequest(),
+                request1 = new XMLHttpRequest(),
+                getCityUrlHash = '',
+                getCityUrlArr;
+
+            if(hash !== '') {
+                hash += "&referer=" + encodeURIComponent(document.referrer);
+            } else {
+                hash += "referer=" + encodeURIComponent(document.referrer);
+            }
+
+            if(elAjaxUrl.match(/#/)) {
+                getCityUrlArr = getCityUrl.split('#');
+                elAjaxUrl = getCityUrlArr[0];
+                getCityUrlHash = getCityUrlArr[1];
+            } else {
+                getCityUrlHash = '';
+            }
+
+            if(elAjaxUrl.match(/\?/)) {
+                elAjaxUrl += "&" + hash;
+            } else {
+                elAjaxUrl += "?" + hash;
+            }
+
+            if(getCityUrlHash !== '') {
+                elAjaxUrl += "#" + getCityUrlHash;
+            }
+
+            
+
+            request.onreadystatechange = function() {
+                if(request.readyState == 4) {
+                    var data = JSON.parse(request.responseText),
+                        cityName;
+
+                    if(typeof(data.data.cityName)!="string") {
+                        cityName = "上海";
+                    } else {
+                        cityName = data.data.cityName;
+                    }
+
+                 	// GA增加统计内容
+                    var gaAddon = {
+						isWebview : globalCheckIsInWebview() ? 'true' : 'false',
+                    };
+                    try {
+                        if('undefined' !== typeof taHeaderFunc) {
+                            taHeaderFunc(cityName);
+                        }
+
+                        if('undefined' !== typeof gaHeaderFunc) {
+                            gaStatus.cityName=cityName;
+                            if(gaStatus.loaded){
+                                gaHeaderFunc(cityName,gaAddon);
+                            }
+
+                        }
+                    } catch(err) {
+                        console.debug(err);
+                    }
+                    var getTelConsultAjax = document.querySelector('#getTelConsultAjax');
+                    var url = "";
+                    if (getTelConsultAjax) {
+                        url = getTelConsultAjax.value;
+                    }else{
+                        return;
+                    }
+                    var telConsult = document.querySelector('#telConsult');
+                    var dotAjax = document.querySelector("#dotAjax");
+                    request1.open("GET",url,true);
+                    request1.withCredentials = true;
+                    request1.send();
+                    request1.onreadystatechange = function(){
+                        if(request1.readyState == 4) {
+                            var data = JSON.parse(request1.responseText);
+                            tuniu_common.cookie.set("tel_400",data.data.telConsult);
+                            telConsult.href = "tel:" + data.data.telConsult;
+                            telConsult.onclick = function(){
+                                try {
+                                    if (dotAjax) {
+                                        $.ajax({
+                                            url: dotAjax.value + '?data={"type": 1, "book_type": 0, "submit_type": 0, "page_type": 1}',
+                                            success: function() {
+                                                window.location = telConsult.href;
+                                            }
+                                        });
+                                        return false;
+                                    }
+                                } catch (e) {
+                                    window.location = telConsult.href;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            request.open('GET', elAjaxUrl, true);
+            request.withCredentials = true;
+            request.send();
+        } catch(e) {
+            console.debug(e);
+        }
+    })();
+</script>
+</head>
+<body>
+<div class="wrapper" id="wrapper">
+	<div id="index">	
+	    
+    <link rel="stylesheet" href="../../site/travelService/css/onlineChat/bootstrap.min.css">
+    <link rel="stylesheet" href="../../site/travelService/css/onlineChat/app.css">
+    <div class="mirror mirror-main active">
+        <!-- S 登录 -->
+        <div class="lg-wrap hidden">
+            <div class="lg-hd">
+                <p>途牛网在线客服聊天系统</p>
+            </div>
+            <div class="lg-bd">
+                <div class="lg-row1">
+                    <span class="lg-tit">登录帐号：</span>
+                    <input type="text" class="pc-input" id="J_loginInput" autofocus="autofocus" placeholder="登录帐号">
+                </div>
+                <div class="lg-row3">
+                    <a href="javascript:;" class="pc-btn btn btn-success" id="J_loginBtn">登录</a>
+                </div>
+            </div> 
+        </div>
+        <!-- E 登录 -->
+        
+        <!-- S 主入口 -->
+        <div class="main-wrap hidden" id="J_main">
+            
+            <!-- loading -->
+            <div class="loading hidden" id="J_loading">
+                <img width="157" height="157" src="../../site/travelService/images/onlineChat/loading.gif" alt="">
+            </div>
+            <!-- loading -->
+
+            <div class="main hidden" id="J_mainContent">
+				<!-- 虚拟界面-开始 -->
+				<div class="sidebar">
+					<div class="chat-list">
+						<div class="search">
+							<i class="icon-search"></i>
+							<input type="text" class="input-search J_searchChat" placeholder='请输入客户订单号查询'>
+							<a href="javascript:;" class="search-close J_closeSearchBtn hidden">
+								<i class="icon-close"></i>
+							</a>
+						</div>
+						<div class="chat-switcher">
+							<div class="inner">
+								<div class="tabs">
+									<div class="active tab action-icon icon-current-chat J_switchChatCurrent">
+										
+									</div>
+									<div class="tab action-icon icon-history-chat J_switchChatHistory">
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="no-search-result ">
+							<div class="user-loading">
+								<img src="../../site/travelService/images/onlineChat/loading-content.gif" alt="">
+							</div>
+						</div>
+						<div class="chat-items">
+							<ul>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="main-content">
+					<div class="content-inner">
+					</div>
+					<div class="content-inner-dead hidden">
+					</div>
+				</div>
+
+				<div class="phrase-memo-container">
+				<!-- 虚拟界面-结束 -->
+            </div>
+        </div>
+        
+<!--         <div class="modal J_modal4AddPhrase J_css4Phrase hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>添加常用语</h5>
+                    </div>
+                    <div class="modal-body">
+                        <textarea name="" id="J_addPhraseText" placeholder="手动添加常用语，换行新增一条。"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row stand-still">
+                            <button class="btn btn-primary" id="J_sure4AddPhrase">确定</button>
+                            <button class="btn btn-default" id="J_cancel4AddPhrase">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div> -->
+
+
+
+        <div class="modal J_modalDeleteChat J_css4Phrase hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>结束会话</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="inner">
+                            <div class="modal-msg">
+                                <div class="icon-niu">
+                                    
+                                </div>
+                                <div class="msg-content">
+                                    <div class="msg-heading">
+                                        确定已完成解答？
+                                    </div>
+                                    <div class="msg-body">
+                                        结束后，若客人再次咨询需要重新分配客服
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-option">
+                                <div class="modal-action J_selectPushRTXDeleteChat checkbox-tidy">                                                    
+                                    <input class="tick" type="checkbox" value="0" id="J_selectPushRTXDeleteChat" name="J_selectPushRTXDeleteChat" data-id="533">                                                    
+                                    <label for="J_selectPushRTXDeleteChat"></label>                                                
+                                </div>
+                                <div class="checkbox-label" data-triggerfor="#J_selectPushRTXDeleteChat">
+                                    RTX提醒相关处理人
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row stand-still">
+                            <button class="btn btn-primary" id="J_sureDeleteChat">确定</button>
+                            <button class="btn btn-default" id="J_cancelDeleteChat">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="modal J_css4Product hidden">
+            <div class="modal-backdrop" id="J_productBackdrop"></div>
+            <div class="modal-dialog">
+                <div class="product-wrap J_productDialog hidden">
+                </div>
+                <div class="product-modal J_productDialog J_productDate hidden">
+                </div>
+                <div class="product-modal J_productDialog J_productFee hidden">
+                </div>
+            </div> 
+        </div>
+
+        <script type="text/html" id="J_productFeeTpl">
+
+            <div class="pm-header">
+                <a class="back J_backProduct" href="javascript:;">
+                    <i class="icon-title-back effect-active"></i>
+                    返回
+                </a>
+                <span class="title">费用及预订须知</span>
+            </div>
+            <div class="pm-pay">
+                {{if productFee.feeIncludes.length > 0}}
+                <div class="pay-item">
+                    <div class="header">
+                        <span class="pillar"></span>
+                        费用包含
+                    </div>
+
+                    <div class="body">
+                        {{each productFee.feeIncludes}}
+                        <p class="tit">{{$value.name}}</p>
+                            {{each $value.desc}}
+                            <p class="desc">{{$value | strBrFormat}}</p>
+                            {{/each}}
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="panel-flag"></div>
+                {{/if}}
+                {{if productFee.feeExcludes.length > 0}}
+                <div class="pay-item">
+                    <div class="header">
+                        <span class="pillar"></span>
+                        费用不包含
+                    </div>
+
+                    <div class="body">
+                        {{each productFee.feeExcludes}}
+                        <p class="tit">{{$value.name}}</p>
+                            {{each $value.desc}}
+                            <p class="desc">{{$value | strBrFormat}}</p>
+                            {{/each}}
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="panel-flag"></div>
+                {{/if}}
+                {{if productFee.feeSelf.length > 0}}
+                <div class="pay-item">
+                    <div class="header">
+                        <span class="pillar"></span>
+                        自费
+                    </div>
+                    <div class="body">
+                        {{each productFee.feeSelf}}
+                        <p class="tit">{{$value.name}}</p>
+                        <p class="desc">{{$value.priceDesc}}</p>
+                        <p class="desc">{{$value.desc}}</p>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="panel-flag"></div>
+                {{/if}}
+                {{if noticeData.agencyInfo.length > 0}}
+                <div class="pay-item">
+                    <div class="header">
+                        <span class="pillar"></span>
+                        成团信息
+                    </div>
+
+                    <div class="body">
+                        {{each noticeData.agencyInfo}}
+                        <p class="tit">{{$value | strBrFormat}}</p>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="panel-flag"></div>
+                {{/if}}
+                {{if noticeData.notices.length > 0}}
+                <div class="pay-item">
+                    <div class="header">
+                        <span class="pillar"></span>
+                        提示
+                    </div>
+
+                    <div class="body">
+                        {{each noticeData.notices}}
+                        <p class="tit">{{$value.title}}</p>
+                            {{each $value.notice}}
+                            <p class="desc">{{$value | strBrFormat}}</p>
+                            {{/each}}
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="panel-flag"></div>
+                {{/if}}
+            </div>
+        </script>
+
+        <script id="J_productDateTpl" type="text/html">
+            <div class="pm-header">
+                <a class="back J_backProduct" href="javascript:;">
+                    <i class="icon-title-back effect-active"></i>
+                    返回
+                </a>
+                <span class="title">查看团期</span>
+            </div>
+            <div class="pm-tuan">
+                <table>
+                    <thead>
+                        <th>日期</th>
+                        <th>成人价</th>
+                        <th>儿童价</th>
+                        <th>单房差</th>
+                    </thead>
+                    <tbody>
+                        {{each planDates}}
+                        <tr>
+                            <td>{{$value.planDate}}</td>
+                            <td class="orange">&yen;{{$value.adultPrice}}</td>
+                            <td class="orange">&yen;{{$value.childPrice}}</td>
+                            <td class="orange">&yen;{{$value.roomPlus}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </script>
+
+        <script id="J_productTpl" type="text/html">
+        <div class="panel-header">
+            产品详情
+        </div>
+
+        <div class="panel-banner">
+            <img width="100%" src="{{images[0].simage}}">
+            <div class="label">
+                <span class="label-left">
+                    <span class="icon-group"></span>
+                    <span>{{category}}</span>
+                    <span>|</span>
+                    <span>{{startCity}}出发</span>
+                </span>
+                <span class="label-right">
+                    <span>产品编号: {{productId}}</span>
+                </span>
+            </div>
+        </div>
+        
+        <div class="panel-title">
+            <div class="title-txt">{{name}}</div>
+            <div class="price">
+                <span class="desc">手机专享价：<span class="price-text">￥{{lowestPromoPrice}}</span> 起</span>
+                <span class="desc" style="display: block;">途牛价：<del style="margin-left: 5px; color: #999;">￥{{lowestPrice}}</del></span>
+            </div>
+        </div>
+
+        {{if promotionDesc}}
+        <div class="panel-preferential">
+            <div class="panel-flag"></div>
+            <div class="preferential-title">
+                优惠信息
+            </div>
+            <div class="preferential-con">
+                <div class="item">
+                    {{promotionDesc | strBrFormat}}
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
+        <div class="panel-date">
+            <div class="panel-flag"></div>
+            <div class="date-title">
+                查看团期
+                <a class="more" id="J_moreProductDate" href="javascript:;">更多&gt;</a>
+            </div>
+            <div class="date-con">
+                {{journeyAPlanDateStr}}
+            </div>
+        </div>
+
+        <div class="panel-info">
+            <div class="panel-flag"></div>
+            <div class="info-title">行程介绍</div>
+            {{if routesItinerary.length > 0}}
+            <div class="info-tabs">
+                <ul>
+                    <li class="J_journeyPlan active">A行程</li>
+                    {{each routesItinerary}}
+                    <li class="J_journeyPlan">{{$value.journeyName}}</li>
+                    {{/each}}
+                </ul>
+                <p class="date J_journeyDate active">使用团期：{{each defaultRouteDateList}}{{$value | dateYearFormat}}、{{/each}} </p>
+                {{each routesItinerary}}
+                <p class="date J_journeyDate hidden">使用团期：{{each $value.planDate}}{{$value | dateYearFormat}}、{{/each}} </p>
+                {{/each}}
+            </div>
+            {{/if}}
+            <div class="journey-line active J_journeyPannel">
+                <ul>
+                {{each versionItineraryNew}}
+                    <li>
+                    <div class="day-title">
+                        <span>{{$value.title | strTrafficFormat}}</span>
+                        <div class="ball">
+                            <span {{if $index>8}}style="font-size: 1.3rem; margin-top: 2px; margin-left: 3px;"{{/if}}>D{{$index+1}}</span>
+                        </div>
+                    </div>
+                    <div class="day-content">
+                        <p>{{$value.dayInfo}}</p>
+                        {{if $value.routeDetails}}
+                            {{each $value.routeDetails}}
+                                {{if $value.routeType == 0}}
+                                    {{if $value.routeTitle}}
+                                        <p class="tit">{{$value.routeTitle}}</p>
+                                    {{/if}}
+                                    {{if $value.routeContents[0].textDesc}}
+                                        <p class="desc">{{$value.routeContents[0].textDesc}}</p>
+                                    {{/if}}
+                                {{/if}}
+                                {{if $value.routeType == 1}}
+                                    {{if $value.routeTitle}}
+                                        <p class="tit">{{$value.routeTitle}}</p>
+                                    {{/if}}
+                                    {{if $value.routeContents[0].textDesc}}
+                                        <p class="desc">{{$value.routeContents[0].textDesc}}</p>
+                                    {{/if}}
+                                    {{if $value.routeContents[0].detail}}
+                                    <div class="imgs">
+                                        {{each $value.routeContents[0].detail}}
+                                        <div class="img-box">
+                                            <span data-picture="" data-alt="{{$value.name}}">
+                                            <img alt="{{$value.name}}" src="{{$value.imgUrl}}"></span>
+                                            <div class="img-label">
+                                                {{$value.name}}
+                                            </div>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                    {{/if}}
+                                {{/if}}
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                    <div class="day-footer">
+                        <div class="fan-zhu">
+                            <div class="min">
+                                早餐：{{$value.breakfast}} <br>
+                                午餐：{{$value.lunch}} <br>
+                                晚餐：{{$value.dinner}}
+                            </div>
+                            <div>
+                                住宿：{{$value.accommodation}}
+                            </div>
+                        </div>
+                    </div>
+                    </li>
+                    {{/each}}
+                </ul>
+                <div class="label" style="padding-top:0;">
+                    <div class="over">途牛旅游网祝您旅途愉快</div>
+                    <div class="dott" style="top:5px;"></div>
+                    <div class="border-box"></div>
+                </div>
+                <div class="tips">
+                    *以上行程仅供参考，最终行程可能会根据实际情况进行微调，敬请以出团通知为准。
+                </div>
+            </div>
+            {{if routesItinerary.length > 0}}
+            {{each routesItinerary}}
+            <div class="journey-line hidden J_journeyPannel">
+                <a href="{{$value.image}}" target="_blank">
+                    <img src="{{$value.image}}" width="295" />
+                </a>
+            </div>
+            {{/each}}
+            {{/if}}
+        </div>
+        {{if visaInfoUrl}}
+        <div class="panel-date">
+            <div class="panel-flag"></div>
+            <div class="date-title">
+                签证信息
+                <a class="more" href="{{visaInfoUrl}}" target="_blank">更多&gt;</a>
+            </div>
+        </div>
+        {{/if}}
+        <div class="panel-date">
+            <div class="panel-flag"></div>
+            <div class="date-title">
+                费用及预订通知
+                <a class="more" data-product-id="{{productId}}" data-product-type="{{productType}}" id="J_productMoreFee" href="javascript:;">更多&gt;</a>
+            </div>
+        </div>
+        </script>
+    </div>
+
+        <div class="modal J_mirrorOrderHis J_css4Phrase hidden">
+            <div class="modal-backdrop"></div>
+            <div class="inner modal-dialog">
+                <div class="orderhis-head">
+                    
+
+                    <div class="head-avatar">
+                        
+                        <div class="avatar" data-user-id="">
+                            <img src="../../site/travelService/images/onlineChat/avatar.png" width="48" height="48" alt="头像" class="avatar-img">
+                        </div>
+                        <div class="avatar-label">
+                            <span class="avatar-name">包祖兰</span>的<span class="avatar-status">咨询历史</span>
+                        </div>
+                        <!-- <div class="btn btn-primary btn-sm J_back2home">
+                            Back
+                        </div> -->
+                    </div>
+
+                    <div class="head-switch">
+                        
+                        <div class="inner">
+                            
+                            <div class="tabs">
+                                
+                                <div class="tab active J_switchOrderHis">
+                                    <i class="icon-orderhis"></i>
+                                    <span class="icon-label">订单咨询</span>
+                                </div>
+
+                                <div class="tab J_switchPrdHis">
+                                    <i class="icon-prdhis"></i>
+                                    <span class="icon-label">产品咨询</span>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button class="button-close J_closeMirrorOrderHis"></button>
+
+                </div>
+
+
+
+                <div class="orderprdhis-main" data-imsession-id="">
+
+                    <!-- 左侧 -->
+                    <div class="side-left orderhis-list active">
+                        
+                      <!--   <div class="list-item" data-order-id="">
+                            <div class="inner">
+                                 <div class="item-id">
+                                    订单编号：<span class="bold">22112265</span>
+                                </div>
+                                <div class="item-name">
+                                    [23456544]<巴厘岛4晚6日游>2晚独栋泳池别墅，蜜月蓝梦岛
+                                </div>                           
+                            </div>
+                        </div>
+                        <div class="list-item" data-order-id="">
+                            <div class="inner">
+                                 <div class="item-id">
+                                    订单编号：<span class="bold">22112265</span>
+                                </div>
+                                <div class="item-name">
+                                    [23456544]<巴厘岛4晚6日游>2晚独栋泳池别墅，蜜月蓝梦岛
+                                </div>                           
+                            </div>
+                        </div> -->
+                        <div class="loading">
+                            <img src="../../site/travelService/images/onlineChat/loading-content.gif" alt="">
+                        </div>
+                    </div>
+
+                    <div class="side-left prdhis-list">
+                        
+                       <!--  <div class="list-item" data-product-id="">
+                            <div class="inner">
+                                <div class="item-id">
+                                    产品编号：<span class="bold">22112265</span>
+                                </div>
+                                <div class="item-name">
+                                    <巴厘岛6日半自助游>蓝梦出海，独栋别墅，悦榕庄下午茶，纯玩
+                                </div>                        
+                            </div>
+                        </div>
+                        <div class="list-item" data-product-id="">
+                            <div class="inner">
+                                <div class="item-id">
+                                    产品编号：<span class="bold">22112265</span>
+                                </div>
+                                <div class="item-name">
+                                    <巴厘岛6日半自助游>蓝梦出海，独栋别墅，悦榕庄下午茶，纯玩
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="loading">
+                            <img src="../../site/travelService/images/onlineChat/loading-content.gif" alt="">
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- 右侧 -->
+                    <div class="side-right orderhis-detail active">
+                        
+
+                        <div class="detail-inner">
+
+                            <div class="detail-item active" data-order-id="434324">
+                               <div class="chat-con">
+                                     <ul>
+                                        <li class="time" data-time="1435516889000">                                        
+                                            <span>2015-06-29 02:41</span>                                    
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">李志民</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                客服李志民为您服务，请问有什么可以帮您？
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-right"></i>
+                                                <div class="text">您好，请您回复出游人姓名及有效证件号，以便为您购买保险，谢谢！</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-right"></i>
+                                                <div class="text">您好，如要跟美亚索赔航班延误补偿，请至航空公司柜台开具航班延误证明，要求写明延误时间和延误原因，同时请保管好登机牌，归来可凭航班延误证明和登机牌原件索赔。美亚理赔电话：400-820-8858。</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-right"></i>
+                                                <div class="text">您好，您的___的电子保单已经发送到您电子邮箱中，请注意查收。</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-right"></i>
+                                                <div class="text">您好，出游通知正在批量整理和发送中，非常抱歉给您带来不便，请耐心等待。</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">金晓华</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                您好，具体的航班时间和行程信息会在出游通知上体现，最迟会在出游前1个工作日发送给您，请耐心等待。
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">好的 我回家询问一下情况</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">张奇瑞</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                您好，我是旅游顾问张奇瑞，您支付的团款22345元已收到，请放心。
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">好的谢谢你！</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">王光华</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                不客气，如果未来遇到问题都可以及时联系我们！
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">再见！</div>
+                                            </div>
+                                        </li>
+                                   </ul>
+                               </div>
+                            </div>
+
+                            <div class="detail-item " data-order-id="434324">
+                               <div class="chat-con">
+                                   <ul>
+                                        <li class="time" data-time="1435516889000">                                        
+                                            <span>2015-06-29 02:41</span>                                    
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">李志民</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                客服李志民为您服务，请问有什么可以帮您？
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">您好，请您回复出游人姓名及有效证件号，以便为您购买保险，谢谢！</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">您好，如要跟美亚索赔航班延误补偿，请至航空公司柜台开具航班延误证明，要求写明延误时间和延误原因，同时请保管好登机牌，归来可凭航班延误证明和登机牌原件索赔。美亚理赔电话：400-820-8858。</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">您好，您的___的电子保单已经发送到您电子邮箱中，请注意查收。</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">您好，出游通知正在批量整理和发送中，非常抱歉给您带来不便，请耐心等待。</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">金晓华</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                您好，具体的航班时间和行程信息会在出游通知上体现，最迟会在出游前1个工作日发送给您，请耐心等待。
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">好的 我回家询问一下情况</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">张奇瑞</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                您好，我是旅游顾问张奇瑞，您支付的团款22345元已收到，请放心。
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">好的谢谢你！</div>
+                                            </div>
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">王光华</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                不客气，如果未来遇到问题都可以及时联系我们！
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">再见！</div>
+                                            </div>
+                                        </li>
+                                   </ul>
+                               </div>
+                            </div>
+
+
+                          <!--   <div class="loading">
+                                <img src="../../site/travelService/images/onlineChat/loading-content.gif" alt="">
+                            </div> -->
+
+
+                        </div>
+
+                    </div>
+
+                   <div class="side-right prdhis-detail">
+                        
+
+                        <div class="detail-inner">
+
+                            <div class="detail-item active" data-product-id="">
+                               <div class="chat-con">
+                                   <ul>
+                                        <li class="time" data-time="1435516889000">                                        
+                                            <span>2015-06-29 02:41</span>                                    
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">金晓华</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                客服李志民为您服务，请问有什么可以帮您？
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">明明</div>
+                                            </div>
+                                        </li>
+                                   </ul>
+                               </div>
+                            </div>
+
+                            <div class="detail-item " data-product-id="">
+                               <div class="chat-con">
+                                   <ul>
+                                        <li class="time" data-time="1435516889000">                                        
+                                            <span>2015-06-29 02:41</span>                                    
+                                        </li>
+                                        <li class="customer-reply" data-message-id="8939">
+                                            <div class="reply-wrapper">
+                                                <div class="author" data-customer-id="">
+                                                    <span class="author-name">金晓华</span>
+                                                    <i class="icon-micphone"></i>
+                                                </div>
+                                                <i class="arrow-right"></i>
+                                                <div class="text">
+                                                客服李志民为您服务，请问有什么可以帮您？
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="user-reply " data-message-id="8940">
+                                            <div class="reply-wrapper">
+                                                <i class="arrow-left"></i>
+                                                <div class="text">明明</div>
+                                            </div>
+                                        </li>
+                                   </ul>
+                               </div>
+                            </div>
+
+
+                            <div class="loading">
+                                <img src="../../site/travelService/images/onlineChat/loading-content.gif" alt="">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+            
+        </div>
+
+    </div>
+    <p class="network-tip hidden" id="J_networkTip">网络连接正常</p>
+    <!-- E 主入口 -->
+    <script src="../../site/travelService/js/lib/seajs/2.1.1/sea.min.js"></script>
+    <script src="../../site/travelService/js/config/config.js"></script>
+    <script src="../..//site/travelService/js/modules/onlineChat/app.js"></script>
+	</div>
+	</div>
+
+        <script type="text/javascript">
+            var no_show_download_p_value = [15485,16276,14816,16194,14895,16238,16576,16670,16524,16525,16526,16527,16528,16529,16530,16531,16532,16533,16534,16238,16535,16667]; 
+            var no_show_slider_p_value = [16276]; 
+            var pageName="http://xchat.tuniu.org/manager/onlineChat?debug=true";
+        </script>
+        <input type="hidden" id="appTitle" name="appTitle" value="途牛旅游网" />
+                <div id="tn_app_top_bar" style="display: none;">
+                    <input id="top_bar_title" value="途牛旅游网" /><input id="top_bar_sub_title" value="" /><input id="top_bar_show_refresh" value="" /><input id="top_bar_show_search" value="" /><input id="top_bar_show_niuxin" value="" />
+                </div>
+            <script type="text/javascript" src="http://xchat.tuniu.org/site/js/common/commonV2.js?v=2016031402"></script>
+</body>
+<script src="/site/m2015/js/global/app_download.min.js"></script>
+<!-- Time: 2016-04-06 15:52:24 -->
+</html>
+
