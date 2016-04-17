@@ -22,4 +22,6 @@ public interface SessionService {
     LatestSessionListResponse getLatestSessionList(int userId);
 
     int deleteSession(int sessionId);
+
+    List<SessionVO> getSessionListByUserIdFriendId(int userId, int friendId);
 }

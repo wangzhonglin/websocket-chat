@@ -52,12 +52,12 @@ a:hover {
 	padding: 4px 10px 5px;
 	border: 0;
 	box-shadow: 2px 2px 3px rgba(0,0,0,0.7) inset, 0 1px 0 rgba(255,255,255,0.2); 
-	width: 100px;
+	width: 150px;
 }
 
 #search button {
 	border: 0;
-	margin-top: -11px;
+	margin-top: -10px;
 	padding: 5px 10px 4px;
 	border-radius: 0 4px 4px 0;
 	box-shadow: -2px 2px 3px rgba(0,0,0,0.7) inset, 0 1px 0 rgba(255,255,255,0.2); 
@@ -1022,8 +1022,14 @@ a:hover {
     padding: 1px;
     position: relative;
 }
+.chat-users .contact-list .icon-close {
+	display: none;
+}
 .chat-users .contact-list li:hover {
 	background-color: #efefef;
+}
+.chat-users .contact-list li:hover .icon-close{
+	display: inline-block;
 }
 .chat-users .contact-list li a {
     color: #666666;
@@ -1031,10 +1037,6 @@ a:hover {
     padding: 8px 5px;
 }
 .chat-users .contact-list li.online a {
-	font-weight: bold;
-}
-.chat-users .contact-list li.new {
-	background-color: #eaeaea;
 }
 .chat-users .contact-list li.offline {
 	background-color: #EDE0E0;

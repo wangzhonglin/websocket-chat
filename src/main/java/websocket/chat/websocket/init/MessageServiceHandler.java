@@ -128,7 +128,7 @@ public class MessageServiceHandler extends ChannelInboundHandlerAdapter {
     private String dealMsg(RequestVO requestVO, ChannelHandlerContext ctx) {
         String result = dispatcherSvc.dispatchChannelTask(requestVO, ctx);
         if (result == null) {
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH, false, "消息处理失败"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, "消息处理失败"));
         } else {
             return result;
         }

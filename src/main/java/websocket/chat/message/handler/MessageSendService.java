@@ -40,14 +40,14 @@ public class MessageSendService extends MessageBaseService {
     private RouteService routeService;
 
     @Override
-    public String executeChannel(RequestVO requestVO, ChannelHandlerContext ctx){
+    public String executeChannel(RequestVO requestVO, ChannelHandlerContext ctx) {
         WsMessageRequest wsMessageRequest = JsonUtil.safelyParseObject(requestVO.getRequest(), WsMessageRequest.class);
         SessionVO sessionVO = createSessionIfNecessary(wsMessageRequest);
         if (!userAbleToSendMessage(requestVO.getLoginSessionId(), wsMessageRequest, sessionVO)) {
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH, false, "发送失败, 消息检验不成功"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, "发送失败, 消息检验不成功"));
         }
         routeService.handleMessage(buildMessage(wsMessageRequest, sessionVO), sessionVO);
-        return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH, true, "发送成功"));
+        return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_SUCCESS, true, "发送成功"));
     }
 
     private boolean userAbleToSendMessage(String loginSessionId, WsMessageRequest wsMessageRequest, SessionVO sessionVO) {

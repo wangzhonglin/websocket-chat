@@ -26,6 +26,8 @@ public class Constant {
     public static final String METHOD_LOGOUT = "method_logout";
     public static final String METHOD_PUSH = "method_push";
     public static final String METHOD_PUSH_ERROR = "method_push_error";
+    public static final String METHOD_PUSH_SUCCESS = "method_push_success";
+    public static final String METHOD_CREATE_SESSION = "method_create_session";
 
     /**
      * JSON_CALLBACK

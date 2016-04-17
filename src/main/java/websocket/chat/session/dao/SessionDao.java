@@ -22,4 +22,6 @@ public interface SessionDao {
     List<SessionVO> getSessionListByUserId(@Param("userId") int userId);
 
     int updateSessionStatusById(@Param("id") int id, @Param("status") int status);
+
+    List<SessionVO> getSessionListByUserIdFriendId(@Param("userId") int userId, @Param("friendId") int friendId);
 }

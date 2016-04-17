@@ -94,4 +94,9 @@ public class SessionServiceImpl implements SessionService {
     public int deleteSession(int sessionId) {
         return sessionDao.updateSessionStatusById(sessionId, SessionStatusEnum.CLOSED.value);
     }
+
+    @Override
+    public List<SessionVO> getSessionListByUserIdFriendId(int userId, int friendId) {
+        return sessionDao.getSessionListByUserIdFriendId(userId, friendId);
+    }
 }

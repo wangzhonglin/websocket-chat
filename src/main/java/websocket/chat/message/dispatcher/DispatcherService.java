@@ -9,10 +9,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 import websocket.chat.constant.Constant;
-import websocket.chat.message.handler.MessageBaseService;
-import websocket.chat.message.handler.MessageConnectService;
-import websocket.chat.message.handler.MessageDisconnectService;
-import websocket.chat.message.handler.MessageSendService;
+import websocket.chat.message.handler.*;
 import websocket.chat.websocket.vo.RequestVO;
 import websocket.chat.websocket.vo.ResponseVO;
 
@@ -36,12 +33,15 @@ public class DispatcherService implements ApplicationListener<ApplicationEvent> 
     private MessageDisconnectService msgDisconnectSvc;
     @Autowired
     private MessageSendService msgSendSvc;
+    @Autowired
+    private MessageSessionService msgSessionSvc;
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         map.put(Constant.METHOD_LOGIN, msgConnectSvc);
         map.put(Constant.METHOD_LOGOUT, msgDisconnectSvc);
         map.put(Constant.METHOD_SEND, msgSendSvc);
+        map.put(Constant.METHOD_CREATE_SESSION, msgSessionSvc);
     }
 
     private MessageBaseService register(RequestVO requestVO) {
@@ -51,12 +51,12 @@ public class DispatcherService implements ApplicationListener<ApplicationEvent> 
     public String dispatchChannelTask(RequestVO requestVO, ChannelHandlerContext ctx) {
         if (requestVO == null) {
             LOG.info("RequestVO is null, cannot dispatchChannelTask.");
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH, false, "请求数据为空"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, "请求数据为空"));
         }
         MessageBaseService msgBaseSvc = register(requestVO);
         if (msgBaseSvc == null) {
             LOG.info("No match for method={}, dispatch task failed.", requestVO.getMethod());
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH, false, "请求方法不正确"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, "请求方法不正确"));
         }
         return msgBaseSvc.executeChannel(requestVO, ctx);
     }

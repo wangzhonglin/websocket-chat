@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
         if (CollectionUtils.isEmpty(friendIdList)) {
             return response;
         }
+        friendIdList.sort(Integer::compare);
         for (Integer friendId : friendIdList) {
             UserVO userVO = userDao.getUserById(friendId);
             if (userVO != null) {

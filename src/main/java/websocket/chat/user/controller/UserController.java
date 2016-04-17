@@ -3,14 +3,11 @@ package websocket.chat.user.controller;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import websocket.chat.BaseController;
 import websocket.chat.constant.Constant;
 import websocket.chat.user.service.UserService;
-import websocket.chat.user.vo.AddFriendRequest;
-import websocket.chat.user.vo.DeleteFriendRequest;
-import websocket.chat.user.vo.FriendListRequest;
-import websocket.chat.user.vo.SearchUserRequest;
-import websocket.chat.user.vo.UserListResponse;
+import websocket.chat.user.vo.*;
 import websocket.chat.util.ApiResponse;
 import websocket.chat.util.JsonUtil;
 
@@ -20,6 +17,7 @@ import websocket.chat.util.JsonUtil;
  *
  * @author wangzhonglin
  */
+@RestController
 public class UserController extends BaseController {
 
     @Autowired
@@ -71,8 +69,8 @@ public class UserController extends BaseController {
             return toJson(apiResponse, cb);
         }
 
-        userService.getFriendListByUserId(request.getUserId());
-        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
+        FriendListResponse response = userService.getFriendListByUserId(request.getUserId());
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, response);
         return toJson(apiResponse, cb);
     }
 
