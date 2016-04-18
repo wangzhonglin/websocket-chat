@@ -66,8 +66,8 @@ $(document).ready(function(){
 	}
 
 	function checkCookies() {
-		var data = getCookies();
-		if(data==null||data=='') {
+		var data = $.cookie('websocket_chat_data');
+		if(data==null) {
 			location.href = "index.html";
 		}
 		var jsonData = JSON.parse(data);
@@ -377,6 +377,10 @@ $(document).ready(function(){
 			$(chat_session_inner).appendTo(chat_messages);
 		}
 	}
+
+	$('#user-nav').on('click','a',function () {
+		$.cookie('websocket_chat_data',null);
+	});
 
 	function initSessionList() {
 		$.ajax({

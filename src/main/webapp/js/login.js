@@ -104,7 +104,7 @@ $(document).ready(function() {
 						timer: 2000
 					});
 				} else {
-					setCookies(jsonResult.data);
+					$.cookie('websocket_chat_data',JSON.stringify(jsonResult.data));
 					location.href="chat.html";
 				}
 			},
