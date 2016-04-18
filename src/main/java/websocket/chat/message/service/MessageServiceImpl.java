@@ -86,4 +86,9 @@ public class MessageServiceImpl implements MessageService {
         response.setLastMessageId(messageList.get(messageList.size() - 1).getId());
         return response;
     }
+
+    @Override
+    public int updateMessageStatus(int sessionId, int status) {
+        return messageDao.updateMessageStatusBySessionId(sessionId, status);
+    }
 }

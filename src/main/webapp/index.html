@@ -1,18 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Websocket聊天系统</title> 
-<meta name="keywords" content="Websocket聊天系统" />
-<meta name="description" content="Websocket聊天系统" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
-<script type="text/javascript" src="js/sweet-alert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/sweet-alert.css">
-<script type="text/javascript" src="js/login.js"></script>
-<link href="css/login2.css" rel="stylesheet" type="text/css" />
+    <title>Websocket聊天系统</title>
+    <meta name="keywords" content="Websocket聊天系统" />
+    <meta name="description" content="Websocket聊天系统" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="js/sweet-alert.min.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="css/unicorn.login.css" />
+    <link rel="stylesheet" href="css/sweet-alert.css" />
+    <link rel="stylesheet" href="css/login2.css" />
 </head>
 <body>
-<h1>Websocket聊天系统<sup></sup></h1>
+<h2>Websocket聊天系统<sup></sup></h2>
 
 <div class="login" style="margin-top:50px;">
 
@@ -25,80 +28,86 @@
         </div>
     </div>
 
-    <div class="web_qr_login" id="web_qr_login" style="display: block; height: 235px;">
+    <div class="web_qr_login" id="web_qr_login">
         <!--登录-->
         <div class="web_login" id="web_login">
 			<div class="login-box">
 			<div class="login_form">
 				<form name="loginform" accept-charset="utf-8" id="login_form" class="loginForm"><input type="hidden" name="did" value="0"/>
 					<input type="hidden" name="to" value="log"/>
-					<div class="uinArea" id="uinArea">
-						<label class="input-tips" for="login_userId">帐号：</label>
-						<div class="inputOuter" id="uArea">
-							<input type="text" id="login_userId" name="login_userId" class="inputstyle"/>
-						</div>
-					</div>
-
-					<div class="pwdArea" id="pwdArea">
-						<label class="input-tips" for="login_password">密码：</label> 
-						<div class="inputOuter" id="pArea">
-							<input type="password" id="login_password" name="login_password" class="inputstyle"/>
-						</div>
-					</div>
-
-                <div style="padding-left:50px;margin-top:20px;">
-					<input type="button" id="submit_login" value="登 录" style="width:150px;" class="button_blue"/>
-				</div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="input-prepend">
+                                <span class="add-on">账号</span><label for="login_userId" style="display: none"></label><input type="text" id="login_userId" name="login_userId" class="input-button-style" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="input-prepend">
+                                <span class="add-on">密码</span><label for="login_password" style="display: none"></label><input type="password" id="login_password" name="login_password" class="input-button-style" />
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
             </div>
+        </div>
+        <div class="form-actions">
+            <input type="button" id="submit_login" value=" 登  录 " class="btn btn-inverse" />
         </div>
         <!--登录end-->
     </div>
 
 	<!--注册-->
-    <div class="qlogin" id="qlogin" style="display: none; ">
+    <div class="web_qr_login1" id="qlogin">
 
-    <div class="web_login">
-		<form name="form2" id="regUser" accept-charset="utf-8">
-			<input type="hidden" name="to" value="reg"/>
-		    <input type="hidden" name="did" value="0"/>
-			<ul class="reg_form" id="reg-ul">
-        		<div id="userCue" class="cue">快速注册请注意格式</div>
-                <li>
+    <div class="web_login" style="height: 220px">
+        <div class="login-box">
+            <div class="login_form">
+                <form name="form2" id="regUser" accept-charset="utf-8">
+                    <ul class="reg_form" id="reg-ul">
+                        <div id="userCue" class="cue">快速注册请注意格式</div>
+                        <li>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on">昵称</span><label for="reg_username" style="display: none"></label><input type="text" id="reg_username" name="reg_username" class="input-button-style" title="昵称为4-16字符" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
 
-                    <label for="reg_username"  class="input-tips2">用户名：</label>
-                    <div class="inputOuter2">
-                        <input type="text" id="reg_username" name="reg_username" maxlength="16" class="inputstyle2" placeholder="用户名为4-16字符"/>
-                    </div>
+                        <li>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on">密码</span><label for="reg_passwd" style="display: none"></label><input type="password" id="reg_passwd" name="reg_passwd" class="input-button-style" title="密码不能小于6位" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
 
-                </li>
-                
-                <li>
-                <label for="reg_passwd" class="input-tips2">密码：</label>
-                    <div class="inputOuter2">
-                        <input type="password" id="reg_passwd"  name="reg_passwd" maxlength="16" class="inputstyle2" placeholder="密码不能小于6位"/>
-                    </div>
-                </li>
-
-                <li>
-                <label for="reg_passwd2" class="input-tips2">确认密码：</label>
-                    <div class="inputOuter2">
-                        <input type="password" id="reg_passwd2" name="reg_passwd2" maxlength="16" class="inputstyle2" />
-                    </div>
-                </li>
-
-                <li>
-                    <div class="inputArea">
-                        <input type="button" id="reg"  style="margin-top:10px;margin-left:85px;width:150px;" class="button_blue" value="注 册"/>
-                    </div>
-                </li>
-				<div class="cl">
-				</div>
-            </ul>
-		</form>
+                        <li>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on" style="margin-left: -28px;">确认密码</span><label for="reg_passwd2" style="display: none"></label><input type="password" id="reg_passwd2" name="reg_passwd2" class="input-button-style" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <div class="cl">
+                        </div>
+                    </ul>
+                </form>
+            </div>
+        </div>
 
     </div>
+        <div class="form-actions">
+            <input type="button" id="reg" value=" 注  册 " class="btn btn-inverse" />
+        </div>
 
     </div>
     <!--注册end-->

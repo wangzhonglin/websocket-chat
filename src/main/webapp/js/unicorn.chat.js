@@ -139,11 +139,15 @@ $(document).ready(function(){
 
 	$('.chat-messages').on('click','a',function () {
 		var chat_messages_click=$(this);
+		getHistoryMessage(chat_messages_click,sessionId,10,chat_messages_click.attr('data-last-msg-id'));
+	});
+
+	function getHistoryMessage(chat_messages_click,sessionId,limit,lastMessageId){
 		$.ajax({
 			url: "http://"+host_domain+"/websocket/chat/api/getHistoryMessageList",
-			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+',"limit":10,"lastMessageId":'+chat_messages_click.attr('data-last-msg-id')+'}',
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+',"limit":'+limit+',"lastMessageId":'+lastMessageId+'}',
 			dataType: "jsonp",
-			jsonpCallback: 'success_jsonpCallback',
+			jsonpCallback: 'success_jsonpCallback_history_message',
 			jsonp: 'cb',
 			success: function(result) {
 				var jsonResult = eval(result);
@@ -164,7 +168,7 @@ $(document).ready(function(){
 			error:function(XMLHttpRequest, textStatus, errorThrown){
 			}
 		});
-	});
+	}
 	
    	var i = 0;
 	function add_message(sessionId,name,img,msg,clear) {
@@ -243,7 +247,7 @@ $(document).ready(function(){
 					url: "http://"+host_domain+"/websocket/chat/api/deleteFriend",
 					data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"friendId":'+friendId+'}',
 					dataType: "jsonp",
-					jsonpCallback: 'success_jsonpCallback',
+					jsonpCallback: 'success_jsonpCallback_delete_friend',
 					jsonp: 'cb',
 					success: function(result) {
 						friend.remove();
@@ -278,7 +282,7 @@ $(document).ready(function(){
 				url: "http://"+host_domain+"/websocket/chat/api/deleteSession",
 				data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+'}',
 				dataType: "jsonp",
-				jsonpCallback: 'success_jsonpCallback',
+				jsonpCallback: 'success_jsonpCallback_delete_session',
 				jsonp: 'cb',
 				success: function(result) {
 				},
@@ -288,8 +292,31 @@ $(document).ready(function(){
 		});
 	});
 	contact_list1.on('click','li',function(){
-		session_click($(this));
+		var session=$(this);
+		session_click(session);
+		var unreadMsgCount=session.find('.msg-count').text();
+		if(unreadMsgCount>0){
+			if(unreadMsgCount>20){unreadMsgCount=20;}
+			var sessionId=session.attr('data-session-id');
+			updateMsgStatus(sessionId);
+			var chat_messages_click=$('.chat-messages div[data-session-id$='+sessionId+']').find('a');
+			getHistoryMessage(chat_messages_click,sessionId,unreadMsgCount,0);
+		}
 	});
+
+	function updateMsgStatus(sessionId){
+		$.ajax({
+			url: "http://"+host_domain+"/websocket/chat/api/updateSessionMessageStatus",
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+'}',
+			dataType: "jsonp",
+			jsonpCallback: 'success_jsonpCallback_msg_status',
+			jsonp: 'cb',
+			success: function(result) {
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+			}
+		});
+	}
 
 	function session_click(session) {
 		if(online_focus_session!=null){online_focus_session.removeClass().addClass('online');}
@@ -305,19 +332,26 @@ $(document).ready(function(){
 		var newSession;
 		var msg_hidden_tail=(unreadMsgCount>0)?'':'-hidden';
 		if(unreadMsgCount>99){unreadMsgCount=99;}
-		newSession='<li class="'+class_name+'" data-session-id="'+sessionId+'" data-friend-id="'+friendId+'"><a><img src="'+img+'" alt="" /> <span>'+userNickname+'</span></a><span class="msg-count badge badge-info-msg'+msg_hidden_tail+'">'+unreadMsgCount+'</span><i class="icon-close"></i></li>';
+		newSession='<li class="'+class_name+'" data-session-id="'+sessionId+'" data-friend-id="'+friendId+'"><a href="javascript:void(0);"><img src="'+img+'" alt="" /> <span>'+userNickname+'</span></a><span class="msg-count badge badge-info-msg'+msg_hidden_tail+'">'+unreadMsgCount+'</span><i class="icon-close"></i></li>';
 		if(class_name=='offline'){$(newSession).hide().prependTo($('#session_list')).slideDown(800);}
 		else{$(newSession).prependTo($('#session_list'));}
 		return $(newSession);
 	}
 
 	function add_friend(friendId,friendNickname,img) {
-		$('.contact-list').append('<li class="online" data-friend-id="'+friendId+'"><a><img src="'+img+'" alt="" /> <span>'+friendNickname+'</span></a><i class="icon-close"></i></li>');
+		$('.contact-list').append('<li class="online" data-friend-id="'+friendId+'"><a href="javascript:void(0);"><img src="'+img+'" alt="" /> <span>'+friendNickname+'</span></a><i class="icon-close"></i></li>');
 	}
 
 	function add_hidden_chat_session_inner(sessionId){
+		var msg_count=$('.contact-list1 li[data-session-id$='+sessionId+']').find('.msg-count');
+		var unreadMsgCount=msg_count.text();
+		if(unreadMsgCount<=0){msg_count.removeClass('badge-info-msg-hidden').addClass('badge-info-msg');}
+		else if(unreadMsgCount<99){
+			unreadMsgCount=++unreadMsgCount;
+			msg_count.html(unreadMsgCount);
+		}
 		var chat_session_inner=$('.chat-messages div[data-session-id$='+sessionId+']');
-		if(chat_session_inner==null){
+		if(chat_session_inner.length<=0){
 			chat_session_inner=' <div id="chat-messages-inner" data-session-id="'+sessionId+'"> <div class="chat-messages-more"> <a class="chat-messages-click" data-last-msg-id="0"><span>查看更多消息</span></a> </div> </div>';
 			$(chat_session_inner).hide().appendTo($('.chat-messages'));
 		}
@@ -349,7 +383,7 @@ $(document).ready(function(){
 			url: "http://"+host_domain+"/websocket/chat/api/getLatestSessionList",
 			data: 'd={"loginSessionId":"' + loginSessionId + '","userId":'+ userId + '}',
 			dataType: "jsonp",
-			jsonpCallback: 'success_jsonpCallback',
+			jsonpCallback: 'success_jsonpCallback_sessions',
 			jsonp: 'cb',
 			success: function(result) {
 				var jsonResult = eval(result);
@@ -378,7 +412,7 @@ $(document).ready(function(){
 			url: "http://"+host_domain+"/websocket/chat/api/getFriendList",
 			data: 'd={"loginSessionId":"' + loginSessionId + '","userId":'+ userId + '}',
 			dataType: "jsonp",
-			jsonpCallback: 'success_jsonpCallback',
+			jsonpCallback: 'success_jsonpCallback_friends',
 			jsonp: 'cb',
 			success: function(result) {
 				var jsonResult = eval(result);

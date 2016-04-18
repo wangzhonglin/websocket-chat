@@ -1,11 +1,21 @@
-html {
-	
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow:hidden;
 }
 body {
-	font-family:"Microsoft Yahei";
+	background-color: #444444;
+	background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#555555), to(#111111));
+	background-image: -webkit-linear-gradient(top, #555555 0%, #111111 100%);
+	background-image: -moz-linear-gradient(top, #555555 0%, #111111 100%);
+	background-image: -ms-linear-gradient(top, #555555 0%, #111111 100%);
+	background-image: -o-linear-gradient(top, #555555 0%, #111111 100%);
+	background-image: linear-gradient(top, #555555 0%, #111111 100%);
+	padding: 0;
+	margin: 0;
+	font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
 	font-size:12px;
-	margin:0;
-background: #fff url(../images/1.jpg) 50% 0 no-repeat;}
+}
 ul {
 	padding:0;
 	margin:0;
@@ -32,6 +42,8 @@ input::-ms-clear {
 	border:2px solid #eee;
 	border-bottom:none;
 	position:relative;
+	box-shadow: 0 0 4px #000000;
+	border-radius: 7px;
 }
 .header {
 	height:50px;
@@ -163,8 +175,15 @@ input::-ms-clear {
 }
 .web_qr_login {
 	position:relative;
-	
 	overflow:hidden;
+	display: block;
+	height: 215px;
+}
+.web_qr_login1 {
+	position:relative;
+	overflow:hidden;
+	display: none;
+	height: 306px;
 }
 
 .cue {
@@ -191,8 +210,8 @@ input::-ms-clear {
 	background-color:#ffffff;
 }
 
-h1{margin:80px auto 50px auto;text-align:center;color:#fff;margin-left:-25px;font-size:35px;font-weight: bold;text-shadow: 0px 1px 1px #555;}
-h1 sup{
+h2{margin:80px auto 50px auto;text-align:center;color:#fff;font-size:35px;font-weight: bold;text-shadow: 0px 1px 1px #555;}
+h2 sup{
     font-size: 18px;
     font-style: normal;
     position: absolute;
@@ -205,13 +224,14 @@ box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, .3);}
 
 .web_login{padding-bottom:20px;}
 
-.jianyi{color:#fff;text-align:center;margin-top:25px;color:#B3B8C4;}
+.jianyi{text-align:center;margin-top:425px;color:#EAE4E4;}
 .reg_form li {
 height: 55px;
 }
 .cue {
-margin-top: 15px;
-margin-bottom: 10px;border:1px solid #eee;border-radius:3px;
+	margin: -20px -21px 10px -49px;
+	border:1px solid #eee;
+	border-radius:3px;
 }
 .web_login input.inputstyle2:focus, .web_login input.inputstyle:focus {
 border: 1px solid #5796f;
@@ -243,9 +263,36 @@ input.button_blue:hover
 	color:#fff;
 	text-decoration:none;
 }
+.button_black
+{
+	display:inline-block;
+	float:left;
+	height:41px;border-radius:4px;
+	background:#2795dc;border:none;cursor:pointer;
+	border-bottom:3px solid #0078b3;*border-bottom:none;
+	color:#fff;
+	font-size:16px;padding:0 10px;*width:140px;
+	text-align:center;outline:none;font-family: "Microsoft Yahei",Arial, Helvetica, sans-serif;
+	border-color:#c5c5c5;border-color:rgba(0,0,0,0.15) rgba(0,0,0,0.15) rgba(0,0,0,0.25)
+}
+input.button_black:hover
+{
+	background:#0081c1;
+	border-bottom:3px solid #006698;*border-bottom:none;
+	color:#fff;
+	text-decoration:none;
+	color:rgba(255,255,255,0.75)
+}
 a.zcxy {text-decoration: underline;line-height:58px;margin-left:15px;color: #959ca8;}
 .web_login .login_form {margin-top:30px;}
 .web_login .uinArea {
 height: 60px;}
 .header .switch{left:70px;}
-
+.form-actions {
+	padding: 14px 20px 15px;
+	margin-top: 0;
+	text-align: center;
+}
+.input-prepend .input-button-style {
+	height: 30px;
+}

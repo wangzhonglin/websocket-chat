@@ -105,7 +105,7 @@ $(document).ready(function() {
 					});
 				} else {
 					setCookies(jsonResult.data);
-					location.href="chat2.html";
+					location.href="chat.html";
 				}
 			},
             error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -127,11 +127,8 @@ $(document).ready(function() {
 
 		if ($('#reg_username').val().length < 4 || $('#reg_username').val().length > 16) {
 
-			$('#reg_username').focus().css({
-				border: "1px solid red",
-				boxShadow: "0 0 2px red"
-			});
-			$('#userCue').html("<font color='red'><b>×用户名为4-16字符</b></font>");
+			$('#reg_username').focus();
+			$('#userCue').html("<font color='red'><b>×昵称为4-16字符</b></font>");
 			return false;
 
 		}
@@ -168,7 +165,7 @@ $(document).ready(function() {
 						title: "注册成功",
 						text: "您的账号: " + jsonResult.data.userId
 					});
-					$('#userCue').html("<font color='green'><b>注册成功, 账号为: " + jsonResult.data.userId + "</b></font>");
+					$('#userCue').html("<font color='green'><b>注册成功, 您的账号为: " + jsonResult.data.userId + "</b></font>");
 				}
 			},
             error:function(XMLHttpRequest, textStatus, errorThrown){

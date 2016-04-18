@@ -3,7 +3,7 @@ druid:
   datasource:
     driverClass: com.mysql.jdbc.Driver
     mapperLocations: classpath*:websocket/chat/**/*Mapper.xml
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/websocket_chat
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/websocket_chat?useUnicode=true&characterEncoding=utf-8
     username: root
     password: 123456
 

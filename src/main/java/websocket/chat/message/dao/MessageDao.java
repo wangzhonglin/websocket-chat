@@ -24,4 +24,6 @@ public interface MessageDao {
     List<MessageVO> getHistoryMessageList(@Param("sessionId") int sessionId, @Param("limit") int limit, @Param("lastMessageId") int lastMessageId);
 
     List<MessageVO> getHistoryMessageListWithoutLastMessageId(@Param("sessionId") int sessionId, @Param("limit") int limit);
+
+    int updateMessageStatusBySessionId(@Param("sessionId") int sessionId, @Param("status") int status);
 }
