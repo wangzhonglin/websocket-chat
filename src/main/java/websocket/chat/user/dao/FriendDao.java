@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface FriendDao {
 
-    int insert(@Param("fiend") FriendVO friendVO);
+    int insert(@Param("friend") FriendVO friendVO);
 
     int delete(@Param("senderUserId") int senderUserId, @Param("receiverUserId") int receiverUserId);
 

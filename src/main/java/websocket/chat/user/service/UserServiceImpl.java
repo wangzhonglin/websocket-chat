@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
             return response;
         }
 
-        if (!StringUtil.allDigit(keyword)) {
+        if (StringUtil.allDigit(keyword)) {
             int userId = StringUtil.str2int(keyword, 0);
             UserVO userVO = userDao.getUserById(userId);
             if (userVO != null) {

@@ -19,11 +19,11 @@ public interface MessageDao {
 
     MessageVO getLastMessageBySessionId(@Param("sessionId") int sessionId);
 
-    int getUnreadMsgCount(@Param("sessionId") int sessionId);
+    int getUnreadMsgCount(@Param("sessionId") int sessionId, @Param("receiverUserId") int receiverUserId);
 
     List<MessageVO> getHistoryMessageList(@Param("sessionId") int sessionId, @Param("limit") int limit, @Param("lastMessageId") int lastMessageId);
 
     List<MessageVO> getHistoryMessageListWithoutLastMessageId(@Param("sessionId") int sessionId, @Param("limit") int limit);
 
-    int updateMessageStatusBySessionId(@Param("sessionId") int sessionId, @Param("status") int status);
+    int updateMessageStatusBySessionIdSenderUserId(@Param("sessionId") int sessionId, @Param("receiverUserId") int receiverUserId, @Param("status") int status);
 }

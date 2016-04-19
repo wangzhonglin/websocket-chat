@@ -28,7 +28,7 @@
     </select>
 
     <select id="getUnreadMsgCount" resultType="int">
-        SELECT COUNT(1) FROM websocket_chat_messages WHERE session_id=#{sessionId} AND status=0 AND del_flag=0
+        SELECT COUNT(1) FROM websocket_chat_messages WHERE session_id=#{sessionId} AND receiver_user_id=#{receiverUserId} AND status=0 AND del_flag=0
     </select>
 
     <select id="getHistoryMessageList" resultMap="resultData">
@@ -41,8 +41,8 @@
         WHERE session_id=#{sessionId} AND del_flag=0 ORDER BY id DESC limit #{limit}
     </select>
     
-    <update id="updateMessageStatusBySessionId">
-        UPDATE websocket_chat_messages SET status=#{status} WHERE session_id=#{sessionId} AND del_flag=0
+    <update id="updateMessageStatusBySessionIdSenderUserId">
+        UPDATE websocket_chat_messages SET status=#{status} WHERE session_id=#{sessionId} AND receiver_user_id=#{receiverUserId} AND del_flag=0
     </update>
 
 </mapper>

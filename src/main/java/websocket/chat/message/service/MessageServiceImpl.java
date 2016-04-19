@@ -41,8 +41,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public int getUnreadMsgCount(int sessionId) {
-        int unreadMsgCount = messageDao.getUnreadMsgCount(sessionId);
+    public int getUnreadMsgCount(int sessionId, int receiverUserId) {
+        int unreadMsgCount = messageDao.getUnreadMsgCount(sessionId, receiverUserId);
         if (unreadMsgCount > 0) {
             return unreadMsgCount;
         } else {
@@ -88,7 +88,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public int updateMessageStatus(int sessionId, int status) {
-        return messageDao.updateMessageStatusBySessionId(sessionId, status);
+    public int updateMessageStatus(int sessionId, int receiverUserId, int status) {
+        return messageDao.updateMessageStatusBySessionIdSenderUserId(sessionId, receiverUserId, status);
     }
 }

@@ -15,9 +15,9 @@ public interface MessageService {
 
     MessageVO getLastMessage(int sessionId);
 
-    int getUnreadMsgCount(int sessionId);
+    int getUnreadMsgCount(int sessionId, int receiverUserId);
 
     HistoryMessageListResponse getHistoryMessageResponse(int sessionId, int limit, int lastMessageId);
 
-    int updateMessageStatus(int sessionId, int status);
+    int updateMessageStatus(int sessionId, int receiverUserId, int status);
 }

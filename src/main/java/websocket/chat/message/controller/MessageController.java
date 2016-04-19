@@ -55,7 +55,7 @@ public class MessageController extends BaseController {
             return toJson(apiResponse, cb);
         }
 
-        messageService.updateMessageStatus(request.getSessionId(), MessageStatusEnum.READ.value);
+        messageService.updateMessageStatus(request.getSessionId(), request.getUserId(), MessageStatusEnum.READ.value);
         ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }

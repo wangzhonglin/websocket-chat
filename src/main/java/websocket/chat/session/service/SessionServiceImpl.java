@@ -84,7 +84,7 @@ public class SessionServiceImpl implements SessionService {
             } else {
                 eachSession.setLastMessageContent(messageVO.getContent());
                 eachSession.setLastMessageTime(messageVO.getCreateTime().getTime());
-                eachSession.setUnreadMsgCount(messageService.getUnreadMsgCount(sessionVO.getId()));
+                eachSession.setUnreadMsgCount(messageService.getUnreadMsgCount(sessionVO.getId(), userId));
             }
         }
         return response;

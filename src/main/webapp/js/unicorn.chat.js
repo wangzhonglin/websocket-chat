@@ -42,10 +42,10 @@ $(document).ready(function(){
 		if (jsonWebSocketMsg.success==false){}
 		else if(jsonWebSocketMsg.method==method_push) {
 			if (data.sessionId == sessionId) {
+				add_message(data.sessionId, data.friendNickname, 'images/demo/av1.jpg', data.content, false);
 			} else {
 				add_hidden_chat_session_inner(data.sessionId);
 			}
-			add_message(data.sessionId, data.friendNickname, 'images/demo/av1.jpg', data.content, false);
 		}else if(jsonWebSocketMsg.method==method_create_session){
 			turnToSession(data.sessionId,data.friendId,data.friendNickname);
 		}
@@ -139,10 +139,10 @@ $(document).ready(function(){
 
 	$('.chat-messages').on('click','a',function () {
 		var chat_messages_click=$(this);
-		getHistoryMessage(chat_messages_click,sessionId,10,chat_messages_click.attr('data-last-msg-id'));
+		getHistoryMessage(chat_messages_click,sessionId,10,chat_messages_click.attr('data-last-msg-id'),true);
 	});
 
-	function getHistoryMessage(chat_messages_click,sessionId,limit,lastMessageId){
+	function getHistoryMessage(chat_messages_click,sessionId,limit,lastMessageId,removeFlag){
 		$.ajax({
 			url: "http://"+host_domain+"/websocket/chat/api/getHistoryMessageList",
 			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+',"limit":'+limit+',"lastMessageId":'+lastMessageId+'}',
@@ -155,11 +155,14 @@ $(document).ready(function(){
 					// init false.
 				} else {
 					var historyMessageList = jsonResult.data.historyMessageList;
+					var currTime=new Date();
+					alert(currTime.getTime());
 					$.each(historyMessageList,function(i,eachHistoryMessage) {
-						add_history_message(sessionId, eachHistoryMessage.userNickname, 'images/demo/av1.jpg', eachHistoryMessage.content, eachHistoryMessage.messageTime);
+						if(currTime.getTime()<eachHistoryMessage.messageTime){}
+						else{add_history_message(sessionId, eachHistoryMessage.userNickname, 'images/demo/av1.jpg', eachHistoryMessage.content, eachHistoryMessage.messageTime);}
 					});
 					chat_messages_click.attr('data-last-msg-id',''+jsonResult.data.lastMessageId);
-					if(historyMessageList.length<10){
+					if(removeFlag==true&&historyMessageList.length<10){
 						chat_messages_click.parent().remove();
 						return false;
 					}
@@ -300,7 +303,7 @@ $(document).ready(function(){
 			var sessionId=session.attr('data-session-id');
 			updateMsgStatus(sessionId);
 			var chat_messages_click=$('.chat-messages div[data-session-id$='+sessionId+']').find('a');
-			getHistoryMessage(chat_messages_click,sessionId,unreadMsgCount,0);
+			getHistoryMessage(chat_messages_click,sessionId,unreadMsgCount,0,false);
 		}
 	});
 
@@ -345,7 +348,10 @@ $(document).ready(function(){
 	function add_hidden_chat_session_inner(sessionId){
 		var msg_count=$('.contact-list1 li[data-session-id$='+sessionId+']').find('.msg-count');
 		var unreadMsgCount=msg_count.text();
-		if(unreadMsgCount<=0){msg_count.removeClass('badge-info-msg-hidden').addClass('badge-info-msg');}
+		if(unreadMsgCount<=0){
+			msg_count.removeClass('badge-info-msg-hidden').addClass('badge-info-msg');
+			msg_count.html(1);
+		}
 		else if(unreadMsgCount<99){
 			unreadMsgCount=++unreadMsgCount;
 			msg_count.html(unreadMsgCount);
@@ -433,4 +439,86 @@ $(document).ready(function(){
 			}
 		});
 	} initFriendList();
+
+	function search_user(keyword){
+		$.ajax({
+			url: "http://"+host_domain+"/websocket/chat/api/searchUser",
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"keyword":"'+keyword+'"}',
+			dataType: "jsonp",
+			jsonpCallback: 'success_jsonpCallback_search_user',
+			jsonp: 'cb',
+			success: function(result) {
+				var jsonResult = eval(result);
+				if (jsonResult.success == false) {
+					clear_search_response_user();
+				} else {
+					if(jsonResult.data.userList.length<=0){clear_search_response_user();}
+					else{
+						add_search_response_user(jsonResult.data);
+					}
+				}
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+			}
+		});
+	}
+
+	function clear_search_response_user(){
+		$('.search-user-list li').remove();
+	}
+
+	function add_search_response_user(data){
+		clear_search_response_user();
+		var userList=data.userList;
+		$.each(userList,function(i,eachUser){
+			var img='images/demo/av1.jpg';
+			var userLi='<li data-user-id="'+eachUser.userId+'"><a href="javascript:void(0);"><img alt="" src="'+img+'" /> <span>'+eachUser.userNickname+'</span></a><i class="icon-plus tip-left" title="加为好友"></i></li>';
+			$('.search-user-list').append(userLi);
+		});
+	}
+
+	$('#search-user-btn').click(function(){
+		var input = $(this).siblings('input[type=text]');
+		if(input.val() != ''){
+			search_user(input.val());
+		}
+	});
+
+	$('#search_user').keypress(function(e){
+		if(e.which == 13) {
+			if($(this).val() != ''){
+				search_user($(this).val());
+			}
+		}
+	});
+
+	$('.search-user-list').on('click','i',function () {
+		var user=$(this).parent();
+		$.ajax({
+			url: "http://"+host_domain+"/websocket/chat/api/addFriend",
+			data: 'd={"loginSessionId":"'+loginSessionId+'","senderUserId":'+userId+',"receiverUserId":"'+user.attr('data-user-id')+'"}',
+			dataType: "jsonp",
+			jsonpCallback: 'success_jsonpCallback_search_user',
+			jsonp: 'cb',
+			success: function(result) {
+				var jsonResult = eval(result);
+				if (jsonResult.success == false) {
+					swal({
+						title: "添加失败",
+						type: "error",
+						timer: 1000
+					});
+				} else {
+					swal({
+						title: "添加成功",
+						type: "success",
+						timer: 1000
+					});
+					add_friend(user.attr('data-user-id'),user.find('span').text(),'images/demo/av1.jpg');
+				}
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+			}
+		});
+	});
 });
