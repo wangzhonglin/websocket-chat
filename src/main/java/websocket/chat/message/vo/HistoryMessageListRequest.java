@@ -13,6 +13,7 @@ public class HistoryMessageListRequest {
     private int lastMessageId;
     private int page;
     private int limit;
+    private int existMsgNum;
 
     public String getLoginSessionId() {
         return loginSessionId;
@@ -60,5 +61,13 @@ public class HistoryMessageListRequest {
 
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+
+    public int getExistMsgNum() {
+        return existMsgNum;
+    }
+
+    public void setExistMsgNum(int existMsgNum) {
+        this.existMsgNum = existMsgNum;
     }
 }

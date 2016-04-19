@@ -17,7 +17,7 @@ public interface MessageService {
 
     int getUnreadMsgCount(int sessionId, int receiverUserId);
 
-    HistoryMessageListResponse getHistoryMessageResponse(int sessionId, int limit, int lastMessageId);
+    HistoryMessageListResponse getHistoryMessageResponse(int sessionId, int limit, int lastMessageId, int existMsgNum);
 
     int updateMessageStatus(int sessionId, int receiverUserId, int status);
 }

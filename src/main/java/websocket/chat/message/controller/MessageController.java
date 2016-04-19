@@ -38,7 +38,8 @@ public class MessageController extends BaseController {
             return toJson(apiResponse, cb);
         }
 
-        HistoryMessageListResponse response = messageService.getHistoryMessageResponse(request.getSessionId(), request.getLimit(), request.getLastMessageId());
+        HistoryMessageListResponse response = messageService.getHistoryMessageResponse(request.getSessionId(), request.getLimit(),
+                request.getLastMessageId(), request.getExistMsgNum());
         ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, response);
         return toJson(apiResponse, cb);
     }

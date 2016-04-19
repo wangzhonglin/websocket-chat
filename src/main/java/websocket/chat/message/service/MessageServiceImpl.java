@@ -51,7 +51,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public HistoryMessageListResponse getHistoryMessageResponse(int sessionId, int limit, int lastMessageId) {
+    public HistoryMessageListResponse getHistoryMessageResponse(int sessionId, int limit, int lastMessageId, int existMsgNum) {
         HistoryMessageListResponse response = new HistoryMessageListResponse();
         List<HistoryMessageListResponse.EachHistoryMessage> eachHistoryMessageList = new ArrayList<>();
         response.setHistoryMessageList(eachHistoryMessageList);
@@ -61,12 +61,21 @@ public class MessageServiceImpl implements MessageService {
             return response;
         }
 
+        if (existMsgNum > 0) {
+            limit += existMsgNum;
+        }
+
         List<MessageVO> messageList;
         if (lastMessageId == 0) {
             messageList = messageDao.getHistoryMessageListWithoutLastMessageId(sessionId, limit);
         } else {
             messageList = messageDao.getHistoryMessageList(sessionId, limit, lastMessageId);
         }
+        if (CollectionUtils.isEmpty(messageList)) {
+            response.setLastMessageId(0);
+            return response;
+        }
+        messageList = messageList.subList(existMsgNum, messageList.size());
         if (CollectionUtils.isEmpty(messageList)) {
             response.setLastMessageId(0);
             return response;

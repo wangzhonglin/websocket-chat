@@ -42,10 +42,10 @@ $(document).ready(function(){
 		if (jsonWebSocketMsg.success==false){}
 		else if(jsonWebSocketMsg.method==method_push) {
 			if (data.sessionId == sessionId) {
-				add_message(data.sessionId, data.friendNickname, 'images/demo/av1.jpg', data.content, false);
 			} else {
 				add_hidden_chat_session_inner(data.sessionId);
 			}
+			add_message(data.sessionId, data.friendNickname, 'images/demo/av1.jpg', data.content, false);
 		}else if(jsonWebSocketMsg.method==method_create_session){
 			turnToSession(data.sessionId,data.friendId,data.friendNickname);
 		}
@@ -139,13 +139,14 @@ $(document).ready(function(){
 
 	$('.chat-messages').on('click','a',function () {
 		var chat_messages_click=$(this);
-		getHistoryMessage(chat_messages_click,sessionId,10,chat_messages_click.attr('data-last-msg-id'),true);
+		var existMsgNum=chat_messages_click.parent().parent().find('img').length;
+		getHistoryMessage(chat_messages_click,sessionId,10,chat_messages_click.attr('data-last-msg-id'),existMsgNum,true);
 	});
 
-	function getHistoryMessage(chat_messages_click,sessionId,limit,lastMessageId,removeFlag){
+	function getHistoryMessage(chat_messages_click,sessionId,limit,lastMessageId,existMsgNum,removeFlag){
 		$.ajax({
 			url: "http://"+host_domain+"/websocket/chat/api/getHistoryMessageList",
-			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+',"limit":'+limit+',"lastMessageId":'+lastMessageId+'}',
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+',"limit":'+limit+',"lastMessageId":'+lastMessageId+',"existMsgNum":'+existMsgNum+'}',
 			dataType: "jsonp",
 			jsonpCallback: 'success_jsonpCallback_history_message',
 			jsonp: 'cb',
@@ -156,7 +157,6 @@ $(document).ready(function(){
 				} else {
 					var historyMessageList = jsonResult.data.historyMessageList;
 					var currTime=new Date();
-					alert(currTime.getTime());
 					$.each(historyMessageList,function(i,eachHistoryMessage) {
 						if(currTime.getTime()<eachHistoryMessage.messageTime){}
 						else{add_history_message(sessionId, eachHistoryMessage.userNickname, 'images/demo/av1.jpg', eachHistoryMessage.content, eachHistoryMessage.messageTime);}
@@ -296,14 +296,16 @@ $(document).ready(function(){
 	});
 	contact_list1.on('click','li',function(){
 		var session=$(this);
-		session_click(session);
 		var unreadMsgCount=session.find('.msg-count').text();
+		session_click(session);
 		if(unreadMsgCount>0){
 			if(unreadMsgCount>20){unreadMsgCount=20;}
 			var sessionId=session.attr('data-session-id');
 			updateMsgStatus(sessionId);
-			var chat_messages_click=$('.chat-messages div[data-session-id$='+sessionId+']').find('a');
-			getHistoryMessage(chat_messages_click,sessionId,unreadMsgCount,0,false);
+			var message_inner=$('.chat-messages div[data-session-id$='+sessionId+']');
+			var chat_messages_click=message_inner.find('a');
+			var existMsgNum=message_inner.find('img').length;
+			if(existMsgNum==0){getHistoryMessage(chat_messages_click,sessionId,unreadMsgCount,0,0,false);}
 		}
 	});
 
@@ -325,7 +327,9 @@ $(document).ready(function(){
 		if(online_focus_session!=null){online_focus_session.removeClass().addClass('online');}
 		online_focus_session=session;
 		session.removeClass().addClass('online-click');
-		session.find('.msg-count').removeClass('badge-info-msg').addClass('badge-info-msg-hidden');
+		var msg_count=session.find('.msg-count');
+		msg_count.removeClass('badge-info-msg').addClass('badge-info-msg-hidden');
+		msg_count.html(0);
 		sessionId=session.attr('data-session-id');
 		friendId=session.attr('data-friend-id');
 		add_chat_session_inner(sessionId);
@@ -509,6 +513,7 @@ $(document).ready(function(){
 						timer: 1000
 					});
 				} else {
+					$('.modal').hide();
 					swal({
 						title: "添加成功",
 						type: "success",
