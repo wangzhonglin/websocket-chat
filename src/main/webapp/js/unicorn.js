@@ -86,7 +86,7 @@ $(document).ready(function(){
 	}
 	
 	// === Tooltips === //
-	$('.tip').tooltip();	
+	$('.tip').tooltip();
 	$('.tip-left').tooltip({ placement: 'left' });	
 	$('.tip-right').tooltip({ placement: 'right' });	
 	$('.tip-top').tooltip({ placement: 'top' });	

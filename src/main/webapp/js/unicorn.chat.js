@@ -623,4 +623,20 @@ $(document).ready(function(){
 		});
 	});
 
+	$("#clipArea").photoClip({
+		size: [180, 180],
+		outputSize: [640, 640],
+		file: "#opt-user-avatar",
+		view: "#view",
+		ok: "#clipBtn",
+		loadStart: function() {
+			console.log("照片读取中");
+		},
+		loadComplete: function() {
+			console.log("照片读取完成");
+		},
+		clipFinish: function(dataURL) {
+			console.log(dataURL);
+		}
+	});
 });
