@@ -34,7 +34,7 @@ public class MessageConnectService extends MessageBaseService {
     public String executeChannel(RequestVO requestVO, ChannelHandlerContext ctx){
         ConnectRequest connectRequest = JsonUtil.safelyParseObject(requestVO.getRequest(), ConnectRequest.class);
         if (connectRequest == null) {
-            LOG.info("Cannot login, bad request. {}", requestVO);
+            LOG.info(Constant.NULL_PARAM_MESSAGE, requestVO);
             return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, Constant.NULL_PARAM_MESSAGE));
         }
 
@@ -44,8 +44,8 @@ public class MessageConnectService extends MessageBaseService {
             return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, Constant.NULL_PARAM_MESSAGE));
         }
 
-        if (!loginService.checkLogin(requestVO.getLoginSessionId(), connectRequest.getUserId())) {
-            LOG.info("验证sessionId, userId失败, requestVO={}", requestVO);
+        if (!checkLogin(requestVO.getLoginSessionId(), connectRequest.getUserId())) {
+            LOG.info(Constant.USER_NOT_LOGIN_MESSAGE, requestVO);
             return JSON.toJSONString(ResponseVO.create(Constant.METHOD_LOGIN, false, Constant.USER_NOT_LOGIN_MESSAGE));
         }
 

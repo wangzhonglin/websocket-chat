@@ -19,4 +19,8 @@ public interface UserDao {
     int createUser(@Param("user") UserVO userVO);
 
     List<UserVO> getUsersByUserNickname(@Param("userNickname") String userNickname);
+
+    int updateUserInfo(@Param("userId") int userId, @Param("userName") String userName, @Param("userNickname") String userNickname,
+                       @Param("password") String password, @Param("sex") int sex, @Param("signature") String signature,
+                       @Param("avatar") String avatar);
 }

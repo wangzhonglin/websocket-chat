@@ -28,6 +28,8 @@ public class Constant {
     public static final String METHOD_PUSH_ERROR = "method_push_error";
     public static final String METHOD_PUSH_SUCCESS = "method_push_success";
     public static final String METHOD_CREATE_SESSION = "method_create_session";
+    public static final String METHOD_DELETE_FRIEND = "method_delete_friend";
+    public static final String METHOD_ADD_FRIEND = "method_add_friend";
 
     /**
      * JSON_CALLBACK
@@ -39,14 +41,15 @@ public class Constant {
      */
     public static final int SUCCESS_CODE = 10000;
     public static final int ERROR_CODE = 10001;
-    public static final int METHOD_UNKNOWN_CODE = 10002;
 
     /**
      * System message
      */
     public static final String SUCCESS_MESSAGE = "SUCCESS";
-    public static final String NULL_PARAM_MESSAGE = "参数为空";
-    public static final String USER_NOT_LOGIN_MESSAGE = "用户未登录";
+    public static final String NULL_PARAM_MESSAGE = "Empty params";
+    public static final String USER_NOT_LOGIN_MESSAGE = "User has not login";
+    public static final String EXECUTION_FAILURE = "Execution failure";
+    public static final String UNKNOWN_METHOD = "Method is unknown";
 
     /**
      * SessionId length
@@ -57,4 +60,11 @@ public class Constant {
      * ActiveMQ destination
      */
     public static final String JMS_MESSAGE_TO_USER_DESTINATION = "jms_message_to_user_destination";
+
+    /**
+     * Default user information
+     */
+    public static final String DEFAULT_USER_SIGNATURE = "";
+    public static final String DEFAULT_USER_AVATAR = "images/demo/av3.jpg";
+
 }

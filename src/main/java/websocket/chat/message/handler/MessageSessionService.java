@@ -24,6 +24,7 @@ import websocket.chat.websocket.vo.ResponseVO;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * MessageSessionService
@@ -46,29 +47,40 @@ public class MessageSessionService extends MessageBaseService {
     public String executeChannel(RequestVO requestVO, ChannelHandlerContext ctx) {
         WsSessionRequest sessionRequest = JsonUtil.safelyParseObject(requestVO.getRequest(), WsSessionRequest.class);
         if (sessionRequest == null) {
-            LOG.info("Empty sessionRequest.");
+            LOG.info(Constant.NULL_PARAM_MESSAGE, requestVO);
             return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, Constant.NULL_PARAM_MESSAGE));
         }
-        List<SessionVO> sessionList = sessionService.getSessionListByUserIdFriendId(sessionRequest.getSenderUserId(), sessionRequest.getSenderUserId());
-        if (!CollectionUtils.isEmpty(sessionList)) {
-            for (SessionVO sessionVO : sessionList) {
-                sessionService.deleteSession(sessionVO.getId());
-            }
+        if (!checkLogin(requestVO.getLoginSessionId(), sessionRequest.getSenderUserId())) {
+            LOG.info(Constant.USER_NOT_LOGIN_MESSAGE, requestVO);
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, Constant.USER_NOT_LOGIN_MESSAGE));
         }
-        SessionVO sessionVO = new SessionVO();
-        sessionVO.setSenderUserId(sessionRequest.getSenderUserId());
-        sessionVO.setReceiverUserId(sessionRequest.getReceiverUserId());
-        sessionVO.setStatus(SessionStatusEnum.SUCCESS.value);
-        Date currDate = new Date();
-        sessionVO.setCreateTime(currDate);
-        sessionVO.setUpdateTime(currDate);
-        sessionVO.setDelFlag(DeleteFlagEnum.OK.value);
-        int sessionId = sessionService.createSession(sessionVO);
+        List<SessionVO> sessionList = sessionService.getSessionListByUserIdFriendId(sessionRequest.getSenderUserId(), sessionRequest.getReceiverUserId());
+        int sessionId;
+        if (!CollectionUtils.isEmpty(sessionList)) {
+            sessionList = sessionList.stream().filter(sessionVO -> sessionVO.getStatus() == SessionStatusEnum.SUCCESS.value)
+                    .sorted((a, b) -> Integer.compare(b.getId(), a.getId()))
+                    .collect(Collectors.toList());
+            SessionVO sessionWithBiggestId = sessionList.stream().findFirst().get();
+            sessionList.stream().filter(sessionVO -> sessionVO.getId() != sessionWithBiggestId.getId()).forEach(sessionVO -> sessionService.deleteSession(sessionVO.getId()));
+            sessionId = sessionWithBiggestId.getId();
+        } else {
+            SessionVO sessionVO = new SessionVO();
+            sessionVO.setSenderUserId(sessionRequest.getSenderUserId());
+            sessionVO.setReceiverUserId(sessionRequest.getReceiverUserId());
+            sessionVO.setStatus(SessionStatusEnum.SUCCESS.value);
+            Date currDate = new Date();
+            sessionVO.setCreateTime(currDate);
+            sessionVO.setUpdateTime(currDate);
+            sessionVO.setDelFlag(DeleteFlagEnum.OK.value);
+            sessionId = sessionService.createSession(sessionVO);
+        }
         WsSessionResponse sessionResponse = new WsSessionResponse();
         sessionResponse.setSessionId(sessionId);
         sessionResponse.setFriendId(sessionRequest.getReceiverUserId());
         UserVO userVO = userService.getUserInfo(sessionRequest.getReceiverUserId());
         sessionResponse.setFriendNickname((userVO == null) ? "" : userVO.getUserNickname());
+        sessionResponse.setAvatar((userVO == null) ? Constant.DEFAULT_USER_AVATAR : userVO.getAvatar());
+        sessionResponse.setActive(true);
 
         noticeReceiverUserToCreateSession(sessionId, sessionRequest.getSenderUserId(), sessionRequest.getReceiverUserId());
         return JSON.toJSONString(ResponseVO.create(Constant.METHOD_CREATE_SESSION, true, sessionResponse));
@@ -82,6 +94,8 @@ public class MessageSessionService extends MessageBaseService {
             sessionResponse.setFriendId(senderUserId);
             UserVO userVO = userService.getUserInfo(senderUserId);
             sessionResponse.setFriendNickname((userVO == null) ? "" : userVO.getUserNickname());
+            sessionResponse.setAvatar((userVO == null) ? Constant.DEFAULT_USER_AVATAR : userVO.getAvatar());
+            sessionResponse.setActive(false);
 
             ResponseVO responseVO = ResponseVO.create(Constant.METHOD_CREATE_SESSION, true, sessionResponse);
             TextWebSocketFrame textWebSocketFrame = new TextWebSocketFrame(JSON.toJSONString(responseVO));

@@ -310,10 +310,6 @@
 
             divTag.addClass(options.radioClass);
 
-            if(options.useID && elem.attr("id") != ""){
-                divTag.attr("id", options.idPrefix+"-"+elem.attr("id"));
-            }
-
             //wrap with the proper elements
             $(elem).wrap(divTag);
             $(elem).wrap(spanTag);

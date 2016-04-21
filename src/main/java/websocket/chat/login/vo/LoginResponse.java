@@ -11,6 +11,8 @@ public class LoginResponse {
     private String sessionId;
     private String name;
     private String nickname;
+    private String signature;
+    private String avatar;
 
     public int getUserId() {
         return userId;
@@ -42,5 +44,21 @@ public class LoginResponse {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

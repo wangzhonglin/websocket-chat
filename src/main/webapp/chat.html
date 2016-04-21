@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
 		<link rel="stylesheet" href="css/unicorn.main.css" />
+		<link rel="stylesheet" href="css/uniform.css" />
 		<link rel="stylesheet" href="css/unicorn.grey.css" class="skin-color" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
 	<body>
@@ -22,10 +23,80 @@
 		</div>
 		<div id="user-nav" class="navbar navbar-inverse">
             <ul class="nav btn-group">
-                <li class="btn btn-inverse"><a title="" href="index.html"><i class="icon icon-share-alt"></i> <span class="text">退出</span></a></li>
+				<li class="btn btn-inverse"><a id="nav-user-info" href="#opt-user-info" data-toggle="modal"><i class="icon icon-user"></i> <span class="text">个人资料</span></a></li>
+				<li class="btn btn-inverse"><a id="nav-add-user" href="#add-user-modal" data-toggle="modal"><i class="icon icon-plus"></i>添加好友</a></li>
+                <li class="btn btn-inverse"><a id="nav-logout" href="index.html"><i class="icon icon-share-alt"></i> <span class="text">退出</span></a></li>
             </ul>
         </div>
-            
+
+		<div id="opt-user-info" class="modal hide">
+			<div class="modal-header">
+				<button data-dismiss="modal" class="close" type="button">×</button>
+				<h3>个人资料</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row-fluid">
+					<div class="span12">
+						<div class="widget-content nopadding">
+							<form action="#" method="get" class="form-horizontal">
+								<div class="control-group">
+									<label class="control-label">昵 称</label>
+									<div class="controls">
+										<input id="opt-user-nickname" type="text">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">密 码</label>
+									<div class="controls">
+										<input id="opt-user-password" type="password">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">性 别</label>
+									<div class="controls">
+										<label><input id="opt-user-female" type="radio" name="radios" /> 女</label>
+										<label><input id="opt-user-male" type="radio" name="radios" /> 男</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">个 性 签 名</label>
+									<div class="controls">
+										<textarea id="opt-user-signature"></textarea>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">头 像 上 传</label>
+									<div class="controls">
+										<input id="opt-user-avatar" type="file" />
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a data-dismiss="modal" id="opt-update-btn" class="btn btn-primary">确定更新</a>
+				<a data-dismiss="modal" class="btn">取消</a>
+			</div>
+		</div>
+
+		<div id="add-user-modal" class="modal hide">
+			<div class="modal-header">
+				<div class="controls">
+					<div class="input-prepend">
+						<input id="search-user-btn" type="button" class="btn btn-inverse" value="搜索"/><label for="search_user" style="display: none"></label><input type="text" id="search_user" name="search_user" class="tip-right" title="输入用户ID或昵称" />
+					</div>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="widget-content nopadding">
+					<ul class="search-user-list">
+					</ul>
+				</div>
+			</div>
+		</div>
+
 		<div id="sidebar">
 			<a href="#" class="visible-phone"><i class="icon icon-home"></i> 首页</a>
 			<ul>
@@ -41,25 +112,8 @@
 		
 		<div id="content">
 			<div id="content-header">
-				<h1 id="login-user-nickname"></h1>
-			</div>
-			<div class="widget-content">
-				<a href="#myModal" data-toggle="modal" class="btn btn-inverse right">添加好友</a>
-				<div id="myModal" class="modal hide">
-					<div class="modal-header">
-						<div class="controls">
-							<div class="input-prepend">
-								<input id="search-user-btn" type="button" class="btn btn-inverse" value="搜索"/><label for="search_user" style="display: none"></label><input type="text" id="search_user" name="search_user" class="tip-right" title="输入用户ID或昵称" />
-							</div>
-						</div>
-					</div>
-					<div class="modal-body">
-						<div class="widget-content nopadding">
-							<ul class="search-user-list">
-							</ul>
-						</div>
-					</div>
-				</div>
+				<div class="header-user-info"><img id="login-user-img" alt="" src=""><span id="login-user-nickname"></span></div>
+				<p id="login-user-signature" class="signature-p"></p>
 			</div>
 			<div class="container-fluid">
 				<div class="row-fluid">
@@ -134,5 +188,10 @@
 		<script type="text/javascript" src="js/jquery.uniform.js"></script>
 		<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="js/unicorn.tables.js"></script>
+		<script type="text/javascript" src="js/hammer.js"></script>
+		<script type="text/javascript" src="js/iscroll-zoom.js"></script>
+		<script type="text/javascript" src="js/jquery.photoClip.js"></script>
+		<script type="text/javascript" src="js/jquery.photoClip.min.js"></script>
+		<script type="text/javascript" src="js/lrz.all.bundle.js"></script>
 	</body>
 </html>

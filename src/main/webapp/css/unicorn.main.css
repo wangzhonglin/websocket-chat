@@ -217,11 +217,11 @@ a:hover {
 	background-image: -o-linear-gradient(top, #FFFFFF 0%, #EEEEEE 100%);
 	background-image: linear-gradient(top, #FFFFFF 0%, #EEEEEE 100%);
     border-top-left-radius: 8px;
-    height: 80px;
-    position: abslute;
+    height: 70px;
     width: 100%;
     margin-top: -38px;
     z-index: 20;
+	padding: 40px 20px 0 26px;
 }
 
 #content-header h1 {
@@ -1404,7 +1404,7 @@ div.dataTables_wrapper .ui-widget-header {
 	opacity: 1;
 }
 .line {
-    background: url("../img/line.png") repeat-x scroll 0 0 transparent;
+    background: url("../images/demo/line.png") repeat-x scroll 0 0 transparent;
     display: block;
     height: 8px;
 }
@@ -1459,10 +1459,10 @@ form {
 }
 .form-horizontal .control-label {
 	padding-top: 15px;
-	width: 180px;
+	width: 100px;
 }
 .form-horizontal .controls {
-	margin-left: 200px;
+	margin-left: 120px;
 	padding: 10px 0;
 }
 .form-horizontal input[type=text], .form-horizontal input[type=password], .form-horizontal textarea {
@@ -1516,6 +1516,15 @@ form {
 		margin-top: 0;
 		padding-top: 15px;
 		width: 100%;
+	}
+	#content-header span {
+		display: block;
+		text-align: center;
+		margin-left: auto;
+		margin-top: 0;
+		padding-top: 15px;
+		width: 100%;
+		font-size: 20px;
 	}
 	#content-header .btn-group {
 		margin-top: 70px;
@@ -1673,4 +1682,18 @@ form {
 }
 .input-prepend .search-button-style {
 	height: 24px;
+}
+.header-user-info {
+	font-size: 28px;
+}
+.header-user-info span {
+	margin-left: 10px;
+}
+#content-header .signature-p {
+	margin: 8px 0 0;
+	font-size: 14px;
+	font-style: italic;
+}
+#clipArea {
+	margin: 20px;
 }

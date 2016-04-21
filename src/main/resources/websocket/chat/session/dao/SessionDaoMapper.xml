@@ -37,4 +37,17 @@
         WHERE ((sender_user_id=#{userId} AND receiver_user_id=#{friendId}) OR (sender_user_id=#{friendId} AND receiver_user_id=#{userId})) AND del_flag=0
     </select>
 
+    <update id="closeSessionByUserIdFriendId">
+        UPDATE websocket_chat_sessions SET status=3
+        WHERE ((sender_user_id=#{userId} AND receiver_user_id=#{friendId}) OR (sender_user_id=#{friendId} AND receiver_user_id=#{userId})) AND del_flag=0
+    </update>
+    
+    <select id="getSessionListBySessionIdList" resultMap="resultData">
+        SELECT id,sender_user_id,receiver_user_id,status,create_time,update_time,del_flag FROM websocket_chat_sessions
+        WHERE del_flag=0 AND id IN
+        <foreach collection="sessionIdList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

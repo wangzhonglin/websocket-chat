@@ -1,31 +1,35 @@
 package websocket.chat.user.vo;
 
-import java.util.Date;
-
 /**
- * User VO
- * Date: 2016-03-21
+ * UpdateUserInfoRequest
+ * Date: 2016-04-20
  *
  * @author wangzhonglin
  */
-public class UserVO {
-    private int id;
+public class UpdateUserInfoRequest {
+    private String loginSessionId;
+    private int userId;
     private String userName;
     private String userNickname;
     private String password;
     private int sex;
     private String signature;
     private String avatar;
-    private Date createTime;
-    private Date updateTime;
-    private int delFlag;
 
-    public int getId() {
-        return id;
+    public String getLoginSessionId() {
+        return loginSessionId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setLoginSessionId(String loginSessionId) {
+        this.loginSessionId = loginSessionId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
@@ -74,29 +78,5 @@ public class UserVO {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public int getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(int delFlag) {
-        this.delFlag = delFlag;
     }
 }

@@ -10,6 +10,7 @@ import websocket.chat.session.service.SessionService;
 import websocket.chat.session.vo.DeleteSessionRequest;
 import websocket.chat.session.vo.LatestSessionListRequest;
 import websocket.chat.session.vo.LatestSessionListResponse;
+import websocket.chat.session.vo.RecentSessionRequest;
 import websocket.chat.util.ApiResponse;
 import websocket.chat.util.JsonUtil;
 
@@ -42,9 +43,9 @@ public class SessionController extends BaseController {
         return toJson(apiResponse, cb);
     }
 
-    @RequestMapping("api/deleteSession")
-    public String deleteSession(@Param("d") String d, @Param("cb") String cb) {
-        DeleteSessionRequest request = JsonUtil.safelyParseObject(d, DeleteSessionRequest.class);
+    @RequestMapping("api/deleteRecentSession")
+    public String deleteRecentSession(@Param("d") String d, @Param("cb") String cb) {
+        RecentSessionRequest request = JsonUtil.safelyParseObject(d, RecentSessionRequest.class);
         if (request == null) {
             ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
             return toJson(apiResponse, cb);
@@ -54,8 +55,25 @@ public class SessionController extends BaseController {
             return toJson(apiResponse, cb);
         }
 
-        sessionService.deleteSession(request.getSessionId());
-        ApiResponse<LatestSessionListResponse> apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
+        sessionService.deleteRecentSession(request.getSessionId(), request.getUserId());
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
+        return toJson(apiResponse, cb);
+    }
+
+    @RequestMapping("api/addRecentSession")
+    public String addRecentSession(@Param("d") String d, @Param("cb") String cb) {
+        RecentSessionRequest request = JsonUtil.safelyParseObject(d, RecentSessionRequest.class);
+        if (request == null) {
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
+            return toJson(apiResponse, cb);
+        }
+        if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
+            return toJson(apiResponse, cb);
+        }
+
+        sessionService.createRecentSession(request.getSessionId(), request.getUserId());
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }
 }

@@ -60,22 +60,28 @@ public class UserServiceImpl implements UserService {
             return 0;
         }
 
-        FriendVO friendVO = new FriendVO();
-        friendVO.setSenderUserId(senderUserId);
-        friendVO.setReceiverUserId(receiverUserId);
-        Date currDate = new Date();
-        friendVO.setCreateTime(currDate);
-        friendVO.setUpdateTime(currDate);
-        friendVO.setDelFlag(DeleteFlagEnum.OK.value);
-        return friendDao.insert(friendVO);
+        FriendVO friendVO;
+        friendVO = friendDao.getFriend(senderUserId, receiverUserId);
+        if (friendVO == null) {
+            friendVO = friendDao.getFriend(receiverUserId, senderUserId);
+        }
+        if (friendVO == null) {
+            friendVO = new FriendVO();
+            friendVO.setSenderUserId(senderUserId);
+            friendVO.setReceiverUserId(receiverUserId);
+            Date currDate = new Date();
+            friendVO.setCreateTime(currDate);
+            friendVO.setUpdateTime(currDate);
+            friendVO.setDelFlag(DeleteFlagEnum.OK.value);
+            return friendDao.insert(friendVO);
+        }
+
+        return 0;
     }
 
     @Override
     public int deleteFriend(int userId, int friendId) {
-        int deleteCount = 0;
-        deleteCount += friendDao.delete(userId, friendId);
-        deleteCount += friendDao.delete(friendId, userId);
-        return deleteCount;
+        return friendDao.delete(userId, friendId);
     }
 
     @Override
@@ -126,14 +132,17 @@ public class UserServiceImpl implements UserService {
         for (Integer friendId : friendIdList) {
             UserVO userVO = userDao.getUserById(friendId);
             if (userVO != null) {
-                FriendListResponse.EachUser eachUser = new FriendListResponse.EachUser();
+                FriendListResponse.EachUser eachUser = FriendListResponse.createEachUser(userVO);
                 eachUserList.add(eachUser);
-                eachUser.setUserId(userVO.getId());
-                eachUser.setUserName(userVO.getUserName());
-                eachUser.setUserNickname(userVO.getUserNickname());
             }
         }
 
         return response;
+    }
+
+    @Override
+    public int updateUserInfo(int userId, String userName, String userNickname, String password,
+                              int sex, String signature, String avatar) {
+        return userDao.updateUserInfo(userId, userName, userNickname, password, sex, signature, avatar);
     }
 }

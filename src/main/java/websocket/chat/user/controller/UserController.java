@@ -35,7 +35,11 @@ public class UserController extends BaseController {
             return toJson(apiResponse, cb);
         }
 
-        userService.addFriend(request.getSenderUserId(), request.getReceiverUserId());
+        int insert = userService.addFriend(request.getSenderUserId(), request.getReceiverUserId());
+        if (insert == 0) {
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.EXECUTION_FAILURE, Constant.ERROR_CODE, null);
+            return toJson(apiResponse, cb);
+        }
         ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }
@@ -88,6 +92,42 @@ public class UserController extends BaseController {
 
         UserListResponse response = userService.searchUser(request.getKeyword());
         ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, response);
+        return toJson(apiResponse, cb);
+    }
+
+    @RequestMapping("api/getUserInfo")
+    public String getUserInfo(@Param("d") String d, @Param("cb") String cb) {
+        UserInfoRequest request = JsonUtil.safelyParseObject(d, UserInfoRequest.class);
+        if (request == null) {
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
+            return toJson(apiResponse, cb);
+        }
+        if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
+            return toJson(apiResponse, cb);
+        }
+
+        UserVO userVO = userService.getUserInfo(request.getUserId());
+        UserListResponse.EachUser userInfo = UserListResponse.createEachUser(userVO);
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, userInfo);
+        return toJson(apiResponse, cb);
+    }
+
+    @RequestMapping("api/updateUserInfo")
+    public String updateUserInfo(@Param("d") String d, @Param("cb") String cb) {
+        UpdateUserInfoRequest request = JsonUtil.safelyParseObject(d, UpdateUserInfoRequest.class);
+        if (request == null) {
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
+            return toJson(apiResponse, cb);
+        }
+        if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
+            ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
+            return toJson(apiResponse, cb);
+        }
+
+        userService.updateUserInfo(request.getUserId(), request.getUserName(), request.getUserNickname(), request.getPassword(),
+                request.getSex(), request.getSignature(), request.getAvatar());
+        ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
         return toJson(apiResponse, cb);
     }
 }

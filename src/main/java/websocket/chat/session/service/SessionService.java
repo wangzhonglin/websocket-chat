@@ -1,6 +1,7 @@
 package websocket.chat.session.service;
 
 import websocket.chat.session.vo.LatestSessionListResponse;
+import websocket.chat.session.vo.RecentSessionVO;
 import websocket.chat.session.vo.SessionVO;
 
 import java.util.List;
@@ -24,4 +25,12 @@ public interface SessionService {
     int deleteSession(int sessionId);
 
     List<SessionVO> getSessionListByUserIdFriendId(int userId, int friendId);
+
+    int deleteSessionByUserIdFriendId(int userId, int friendId);
+
+    int createRecentSession(int sessionId, int userId);
+
+    List<RecentSessionVO> getRecentSessionByUserId(int userId);
+
+    int deleteRecentSession(int sessionId, int userId);
 }

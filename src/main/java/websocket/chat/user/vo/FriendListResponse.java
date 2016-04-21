@@ -16,6 +16,7 @@ public class FriendListResponse {
         eachUser.setUserId(userVO.getId());
         eachUser.setUserName(userVO.getUserName());
         eachUser.setUserNickname(userVO.getUserNickname());
+        eachUser.setAvatar(userVO.getAvatar());
         return eachUser;
     }
 
@@ -31,6 +32,7 @@ public class FriendListResponse {
         private int userId;
         private String userName;
         private String userNickname;
+        private String avatar;
 
         public int getUserId() {
             return userId;
@@ -54,6 +56,14 @@ public class FriendListResponse {
 
         public void setUserNickname(String userNickname) {
             this.userNickname = userNickname;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
         }
     }
 }

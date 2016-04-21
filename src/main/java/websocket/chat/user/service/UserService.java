@@ -1,6 +1,7 @@
 package websocket.chat.user.service;
 
 import websocket.chat.user.vo.FriendListResponse;
+import websocket.chat.user.vo.UpdateUserInfoRequest;
 import websocket.chat.user.vo.UserListResponse;
 import websocket.chat.user.vo.UserVO;
 
@@ -24,4 +25,7 @@ public interface UserService {
     UserListResponse searchUser(String keyword);
 
     FriendListResponse getFriendListByUserId(int userId);
+
+    int updateUserInfo(int userId, String userName, String userNickname, String password,
+                       int sex, String signature, String avatar);
 }

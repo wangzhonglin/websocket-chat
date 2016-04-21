@@ -19,7 +19,8 @@
     </insert>
 
     <update id="delete">
-        UPDATE websocket_chat_friends SET del_flag=1 WHERE sender_user_id=#{senderUserId} AND receiver_user_id=#{receiverUserId} AND del_flag=0
+        UPDATE websocket_chat_friends SET del_flag=1
+        WHERE (sender_user_id=#{userId} AND receiver_user_id=#{friendId}) OR (sender_user_id=#{friendId} AND receiver_user_id=#{userId})AND del_flag=0
     </update>
     
     <select id="getReceiverUserIdListBySenderUserId" resultType="int">
@@ -28,6 +29,11 @@
 
     <select id="getSenderUserIdListByReceiverUserId" resultType="int">
         SELECT sender_user_id FROM websocket_chat_friends WHERE receiver_user_id=#{receiverUserId} AND del_flag=0
+    </select>
+
+    <select id="getFriend" resultMap="resultData">
+        SELECT id,sender_user_id,receiver_user_id,create_time,update_time,del_flag FROM websocket_chat_friends
+        WHERE sender_user_id=#{senderUserId} AND receiver_user_id=#{receiverUserId} AND del_flag=0
     </select>
 
 </mapper>

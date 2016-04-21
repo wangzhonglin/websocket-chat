@@ -10,7 +10,6 @@ import websocket.chat.constant.Constant;
 import websocket.chat.constant.DeleteFlagEnum;
 import websocket.chat.constant.MessageStatusEnum;
 import websocket.chat.constant.SessionStatusEnum;
-import websocket.chat.login.service.LoginService;
 import websocket.chat.message.route.RouteService;
 import websocket.chat.message.vo.MessageVO;
 import websocket.chat.message.vo.WsMessageRequest;
@@ -33,8 +32,6 @@ public class MessageSendService extends MessageBaseService {
     private static final Logger LOG = LoggerFactory.getLogger(MessageSendService.class);
 
     @Autowired
-    private LoginService loginService;
-    @Autowired
     private SessionService sessionService;
     @Autowired
     private RouteService routeService;
@@ -56,7 +53,7 @@ public class MessageSendService extends MessageBaseService {
             return false;
         }
 
-        if (!loginService.checkLogin(loginSessionId, wsMessageRequest.getSenderUserId())) {
+        if (!checkLogin(loginSessionId, wsMessageRequest.getSenderUserId())) {
             LOG.info("验证 sessionId={}, userId={} 失败", loginSessionId, wsMessageRequest.getSenderUserId());
             return false;
         }

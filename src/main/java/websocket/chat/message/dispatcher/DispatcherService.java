@@ -35,6 +35,8 @@ public class DispatcherService implements ApplicationListener<ApplicationEvent> 
     private MessageSendService msgSendSvc;
     @Autowired
     private MessageSessionService msgSessionSvc;
+    @Autowired
+    private MessageFriendService msgFriendSvc;
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
@@ -42,6 +44,8 @@ public class DispatcherService implements ApplicationListener<ApplicationEvent> 
         map.put(Constant.METHOD_LOGOUT, msgDisconnectSvc);
         map.put(Constant.METHOD_SEND, msgSendSvc);
         map.put(Constant.METHOD_CREATE_SESSION, msgSessionSvc);
+        map.put(Constant.METHOD_DELETE_FRIEND, msgFriendSvc);
+        map.put(Constant.METHOD_ADD_FRIEND, msgFriendSvc);
     }
 
     private MessageBaseService register(RequestVO requestVO) {
@@ -51,12 +55,12 @@ public class DispatcherService implements ApplicationListener<ApplicationEvent> 
     public String dispatchChannelTask(RequestVO requestVO, ChannelHandlerContext ctx) {
         if (requestVO == null) {
             LOG.info("RequestVO is null, cannot dispatchChannelTask.");
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, "请求数据为空"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, Constant.NULL_PARAM_MESSAGE));
         }
         MessageBaseService msgBaseSvc = register(requestVO);
         if (msgBaseSvc == null) {
             LOG.info("No match for method={}, dispatch task failed.", requestVO.getMethod());
-            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, "请求方法不正确"));
+            return JSON.toJSONString(ResponseVO.create(Constant.METHOD_PUSH_ERROR, false, Constant.UNKNOWN_METHOD));
         }
         return msgBaseSvc.executeChannel(requestVO, ctx);
     }

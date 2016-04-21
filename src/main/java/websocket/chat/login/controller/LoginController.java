@@ -1,14 +1,13 @@
 package websocket.chat.login.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import websocket.chat.BaseController;
 import websocket.chat.constant.Constant;
+import websocket.chat.constant.SexEnum;
 import websocket.chat.login.service.LoginService;
 import websocket.chat.login.vo.LoginResponse;
 import websocket.chat.login.vo.LoginVO;
@@ -62,6 +61,9 @@ public class LoginController extends BaseController {
         userVO.setPassword(registerVO.getPassword());
         userVO.setUserName(registerVO.getUserName());
         userVO.setUserNickname(registerVO.getUserNickname());
+        userVO.setSex(SexEnum.FEMALE.value);
+        userVO.setSignature(Constant.DEFAULT_USER_SIGNATURE);
+        userVO.setAvatar(Constant.DEFAULT_USER_AVATAR);
         Date currDate = new Date();
         userVO.setCreateTime(currDate);
         userVO.setUpdateTime(currDate);

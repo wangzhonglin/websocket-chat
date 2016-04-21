@@ -1,25 +1,15 @@
 package websocket.chat.message.vo;
 
 /**
- * WsSessionResponse
- * Date: 2016-04-17
+ * WsFriendResponse
+ * Date: 2016-04-21
  *
  * @author wangzhonglin
  */
-public class WsSessionResponse {
-    private int sessionId;
+public class WsFriendResponse {
     private int friendId;
     private String friendNickname;
     private String avatar;
-    private boolean active;
-
-    public int getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(int sessionId) {
-        this.sessionId = sessionId;
-    }
 
     public int getFriendId() {
         return friendId;
@@ -43,13 +33,5 @@ public class WsSessionResponse {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }

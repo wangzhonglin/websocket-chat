@@ -60,6 +60,8 @@ public class LoginService {
         loginResponse.setUserId(userVO.getId());
         loginResponse.setName(userVO.getUserName());
         loginResponse.setNickname(userVO.getUserNickname());
+        loginResponse.setSignature(userVO.getSignature());
+        loginResponse.setAvatar(userVO.getAvatar());
         loginResponse.setSessionId(sessionId);
         return loginResponse;
     }

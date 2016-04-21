@@ -9,22 +9,30 @@
         <result property="userName" column="user_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result property="userNickname" column="user_nickname" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result property="password" column="password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" javaType="int" jdbcType="INTEGER"/>
+        <result property="signature" column="signature" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
         <result property="delFlag" column="del_flag" javaType="int" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="getUserById" resultMap="resultData">
-        SELECT id,user_name,user_nickname,password,create_time,update_time,del_flag FROM websocket_chat_user WHERE id=#{userId} AND del_flag=0
+        SELECT id,user_name,user_nickname,password,sex,signature,avatar,create_time,update_time,del_flag FROM websocket_chat_user WHERE id=#{userId} AND del_flag=0
     </select>
 
     <insert id="createUser" keyProperty="user.id" useGeneratedKeys="true">
-        INSERT INTO websocket_chat_user (user_name,user_nickname,password,create_time,update_time,del_flag)
-        VALUES (#{user.userName},#{user.userNickname},#{user.password},#{user.createTime},#{user.updateTime},#{user.delFlag})
+        INSERT INTO websocket_chat_user (user_name,user_nickname,password,sex,signature,avatar,create_time,update_time,del_flag)
+        VALUES (#{user.userName},#{user.userNickname},#{user.password},#{user.sex},#{user.signature},#{user.avatar},#{user.createTime},#{user.updateTime},#{user.delFlag})
     </insert>
 
     <select id="getUsersByUserNickname" resultMap="resultData">
-        SELECT id,user_name,user_nickname,password,create_time,update_time,del_flag FROM websocket_chat_user WHERE user_nickname=#{userNickname} AND del_flag=0
+        SELECT id,user_name,user_nickname,password,sex,signature,avatar,create_time,update_time,del_flag FROM websocket_chat_user WHERE user_nickname=#{userNickname} AND del_flag=0
     </select>
+    
+    <update id="updateUserInfo">
+        UPDATE websocket_chat_user SET user_name=#{userName},user_nickname=#{userNickname},password=#{password},sex=#{sex},signature=#{signature},avatar=#{avatar}
+        WHERE id=#{userId} AND del_flag=0
+    </update>
 
 </mapper>

@@ -23,6 +23,7 @@ public class LatestSessionListResponse {
         private int sessionId;
         private int friendId;
         private String friendNickname;
+        private String friendAvatar;
         private String lastMessageContent;
         private long lastMessageTime;
         private int unreadMsgCount;
@@ -49,6 +50,14 @@ public class LatestSessionListResponse {
 
         public void setFriendNickname(String friendNickname) {
             this.friendNickname = friendNickname;
+        }
+
+        public String getFriendAvatar() {
+            return friendAvatar;
+        }
+
+        public void setFriendAvatar(String friendAvatar) {
+            this.friendAvatar = friendAvatar;
         }
 
         public String getLastMessageContent() {

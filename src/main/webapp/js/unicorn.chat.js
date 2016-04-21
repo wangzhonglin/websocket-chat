@@ -32,6 +32,8 @@ $(document).ready(function(){
 	var method_send = "method_send";
 	var method_login="method_login";
 	var method_create_session="method_create_session";
+	var method_add_friend="method_add_friend";
+	var method_delete_friend="method_delete_friend";
 	var method_push="method_push";
 	var host_domain="127.0.0.1:8080";
 	var online_focus_session;
@@ -43,11 +45,23 @@ $(document).ready(function(){
 		else if(jsonWebSocketMsg.method==method_push) {
 			if (data.sessionId == sessionId) {
 			} else {
+				var session=$('.contact-list1 li[data-session-id$='+data.sessionId+']');
+				if(session.length<=0){
+					var img=$('.contact-list li[data-friend-id$='+data.friendId+']').find('img').attr('src');
+					add_session(data.sessionId,data.friendId,data.friendNickname,0,img,'offline');
+					add_recent_session(data.sessionId);
+				}
 				add_hidden_chat_session_inner(data.sessionId);
 			}
-			add_message(data.sessionId, data.friendNickname, 'images/demo/av1.jpg', data.content, false);
+			var img=$('.contact-list1 li[data-session-id$='+data.sessionId+']').find('img').attr('src');
+			add_message(data.sessionId, data.friendNickname, img, data.content, false);
 		}else if(jsonWebSocketMsg.method==method_create_session){
-			turnToSession(data.sessionId,data.friendId,data.friendNickname);
+			if(data.active==true){turnToSession(data.sessionId,data.friendId,data.friendNickname,data.avatar);}
+		}else if(jsonWebSocketMsg.method==method_add_friend){
+			add_friend(data.friendId,data.friendNickname,data.avatar);
+		}else if(jsonWebSocketMsg.method==method_delete_friend){
+			var friend=$('.contact-list li[data-friend-id$='+data.friendId+']');
+			delete_friend(friend,data.friendId);
 		}
 	}
 
@@ -78,7 +92,9 @@ $(document).ready(function(){
 			userId = jsonData.userId;
 			userName = jsonData.name;
 			userNickname = jsonData.nickname;
+			$('#login-user-img').attr('src',jsonData.avatar);
 			$('#login-user-nickname').append(userNickname);
+			$('#login-user-signature').append('个性签名：'+jsonData.signature);
 		}
 	} checkCookies();
 
@@ -120,11 +136,30 @@ $(document).ready(function(){
 		socket.send(JSON.stringify(msg));
 	}
 
+	function sendDeleteFriendMsg(senderUserId,receiverUserId){
+		var request={
+			senderUserId:senderUserId,
+			receiverUserId:receiverUserId
+		};
+		var msg=constructMsg(method_delete_friend,request);
+		socket.send(JSON.stringify(msg));
+	}
+
+	function sendAddFriendMsg(senderUserId,receiverUserId){
+		var request={
+			senderUserId:senderUserId,
+			receiverUserId:receiverUserId
+		};
+		var msg=constructMsg(method_add_friend,request);
+		socket.send(JSON.stringify(msg));
+	}
+
 	$('.chat-message button').click(function(){
 		var input = $(this).siblings('span').children('input[type=text]');		
 		if(input.val() != ''){
 			sendNormalMsg(input.val());
-			add_message(sessionId,'我','images/demo/av1.jpg',input.val(),true);
+			var img=$('#login-user-img').attr('src');
+			add_message(sessionId,'我',img,input.val(),true);
 		}
 	});
 
@@ -132,14 +167,16 @@ $(document).ready(function(){
 		if(e.which == 13) {	
 			if($(this).val() != ''){
 				sendNormalMsg($(this).val());
-				add_message(sessionId,'我','images/demo/av1.jpg',$(this).val(),true);
+				var img=$('#login-user-img').attr('src');
+				add_message(sessionId,'我',img,$(this).val(),true);
 			}
 		}
 	});
 
 	$('.chat-messages').on('click','a',function () {
 		var chat_messages_click=$(this);
-		var existMsgNum=chat_messages_click.parent().parent().find('img').length;
+		var lastMsgId=chat_messages_click.attr('data-last-msg-id');
+		var existMsgNum=(lastMsgId>0)?0:chat_messages_click.parent().parent().find('img').length;
 		getHistoryMessage(chat_messages_click,sessionId,10,chat_messages_click.attr('data-last-msg-id'),existMsgNum,true);
 	});
 
@@ -158,8 +195,9 @@ $(document).ready(function(){
 					var historyMessageList = jsonResult.data.historyMessageList;
 					var currTime=new Date();
 					$.each(historyMessageList,function(i,eachHistoryMessage) {
-						if(currTime.getTime()<eachHistoryMessage.messageTime){}
-						else{add_history_message(sessionId, eachHistoryMessage.userNickname, 'images/demo/av1.jpg', eachHistoryMessage.content, eachHistoryMessage.messageTime);}
+						var img=(eachHistoryMessage.userId==userId)?$('#login-user-img').attr('src'):
+							$('.contact-list1 li[data-session-id$='+sessionId+']').find('img').attr('src');
+						add_history_message(sessionId, eachHistoryMessage.userNickname, img, eachHistoryMessage.content, eachHistoryMessage.messageTime);
 					});
 					chat_messages_click.attr('data-last-msg-id',''+jsonResult.data.lastMessageId);
 					if(removeFlag==true&&historyMessageList.length<10){
@@ -225,7 +263,7 @@ $(document).ready(function(){
 		var friendId=friend.attr('data-friend-id');
 		var session=$('.contact-list1 li[data-friend-id$='+friendId+']');
 		if(session.length<=0){sendCreateSessionMsg(userId,friendId);}
-		else{turnToSession(session.attr('data-session-id'),friendId,friend.find('span').text());}
+		else{turnToSession(session.attr('data-session-id'),friendId,friend.find('span').text(),friend.find('img').attr('src'));}
 	});
 	contact_list.on('click','li i',function(e){
 		e.stopPropagation();
@@ -246,23 +284,13 @@ $(document).ready(function(){
 					type: "success",
 					timer: 1000
 				});
-				$.ajax({
-					url: "http://"+host_domain+"/websocket/chat/api/deleteFriend",
-					data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"friendId":'+friendId+'}',
-					dataType: "jsonp",
-					jsonpCallback: 'success_jsonpCallback_delete_friend',
-					jsonp: 'cb',
-					success: function(result) {
-						friend.remove();
-					},
-					error:function(XMLHttpRequest, textStatus, errorThrown){
-					}
-				});
+				sendDeleteFriendMsg(userId,friendId);
+				delete_friend(friend,friendId);
 			}
 		);
 	});
 
-	function turnToSession(sessionId,friendId,friendUserName) {
+	function turnToSession(sessionId,friendId,friendUserName,avatar) {
 		$('#tab1').removeClass('active');
 		$('#tab2').addClass('active');
 		$('.nav-tabs').find('li').each(function (i) {
@@ -270,30 +298,48 @@ $(document).ready(function(){
 			if(i==1){$(this).addClass('active');}
 		});
 		var session=$('.contact-list1 li[data-session-id$='+sessionId+']');
-		if(session.length<=0){add_session(sessionId,friendId,friendUserName,0,'images/demo/av1.jpg','offline');}
-		else{session_click(session);}
+		if(session.length<=0){
+			add_session(sessionId,friendId,friendUserName,0,avatar,'offline');
+			add_recent_session(sessionId);
+			session=$('.contact-list1 li[data-session-id$='+sessionId+']');
+		}
+		session_click(session);
 	}
 
 	var contact_list1=$('.contact-list1');
 	contact_list1.on('click','li i',function(e){
 		e.stopPropagation();
-		$(this).parent().removeClass().addClass('offline').slideUp(function(){
-			if($(this)==online_focus_session){online_focus_session=null;}
-			$(this).remove();
-			sessionId=$(this).attr('data-session-id');
+		delete_session($(this).parent());
+	});
+	function delete_session(sessionBtn){
+		sessionBtn.removeClass().addClass('offline').slideUp(function(){
+			if(sessionBtn==online_focus_session){online_focus_session=null;}
+			sessionBtn.remove();
+			sessionId=sessionBtn.attr('data-session-id');
+			var message_inner=$('.chat-messages div[data-session-id$='+sessionId+']');
+			if(message_inner.length>0){message_inner.remove();}
 			$.ajax({
-				url: "http://"+host_domain+"/websocket/chat/api/deleteSession",
+				url: "http://"+host_domain+"/websocket/chat/api/deleteRecentSession",
 				data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+'}',
 				dataType: "jsonp",
-				jsonpCallback: 'success_jsonpCallback_delete_session',
+				jsonpCallback: 'success_jsonpCallback_delete_recent_session',
 				jsonp: 'cb',
 				success: function(result) {
+					var jsonResult = eval(result);
+					if (jsonResult.success == false) {
+						// init false.
+					} else {
+						//
+					}
 				},
 				error:function(XMLHttpRequest, textStatus, errorThrown){
 				}
 			});
+			var session=$('.contact-list1 li:first');
+			if(session.length>0){session_click(session);}
+			else{sessionId=0;}
 		});
-	});
+	}
 	contact_list1.on('click','li',function(){
 		var session=$(this);
 		var unreadMsgCount=session.find('.msg-count').text();
@@ -345,8 +391,30 @@ $(document).ready(function(){
 		return $(newSession);
 	}
 
+	function add_recent_session(sessionId){
+		$.ajax({
+			url: "http://"+host_domain+"/websocket/chat/api/addRecentSession",
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"sessionId":'+sessionId+'}',
+			dataType: "jsonp",
+			jsonpCallback: 'success_jsonpCallback_add_recent_session',
+			jsonp: 'cb',
+			success: function(result) {
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+			}
+		});
+	}
+
 	function add_friend(friendId,friendNickname,img) {
-		$('.contact-list').append('<li class="online" data-friend-id="'+friendId+'"><a href="javascript:void(0);"><img src="'+img+'" alt="" /> <span>'+friendNickname+'</span></a><i class="icon-close"></i></li>');
+		$('<li class="online" data-friend-id="'+friendId+'"><a href="javascript:void(0);"><img src="'+img+'" alt="" /> <span>'+friendNickname+'</span></a><i class="icon-close"></i></li>').hide().appendTo($('.contact-list')).slideDown(800);
+	}
+
+	function delete_friend(friend,friendId){
+		friend.slideUp(800,function(){
+			friend.remove();
+			var session=$('.contact-list1 li[data-friend-id$='+friendId+']');
+			if(session.length>0){delete_session(session);}
+		});
 	}
 
 	function add_hidden_chat_session_inner(sessionId){
@@ -388,14 +456,40 @@ $(document).ready(function(){
 		}
 	}
 
-	$('#user-nav').on('click','a',function () {
+	$('#nav-logout').on('click',function () {
 		$.cookie('websocket_chat_data',null);
+	});
+	$('#nav-user-info').on('click',function () {
+		$.ajax({
+			url: "http://"+host_domain+"/websocket/chat/api/getUserInfo",
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+'}',
+			dataType: "jsonp",
+			jsonpCallback: 'success_jsonpCallback_user_info',
+			jsonp: 'cb',
+			success: function(result) {
+				var jsonResult = eval(result);
+				if (jsonResult.success == false) {
+					// init false.
+				} else {
+					var data = jsonResult.data;
+					$('#opt-user-nickname').val(data.userNickname);
+					if(data.sex==0){
+						$('#opt-user-female').parent().addClass('checked');
+					}else{
+						$('#opt-user-male').parent().addClass('checked');
+					}
+					$('#opt-user-signature').val(data.signature);
+				}
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+			}
+		});
 	});
 
 	function initSessionList() {
 		$.ajax({
 			url: "http://"+host_domain+"/websocket/chat/api/getLatestSessionList",
-			data: 'd={"loginSessionId":"' + loginSessionId + '","userId":'+ userId + '}',
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+'}',
 			dataType: "jsonp",
 			jsonpCallback: 'success_jsonpCallback_sessions',
 			jsonp: 'cb',
@@ -407,7 +501,7 @@ $(document).ready(function(){
 					var latestSessionList = jsonResult.data.latestSessionList;
 					var newSession=null;
 					$.each(latestSessionList,function(i,eachSession){
-						newSession=add_session(eachSession.sessionId,eachSession.friendId,eachSession.friendNickname,eachSession.unreadMsgCount,'images/demo/av1.jpg','online');
+						newSession=add_session(eachSession.sessionId,eachSession.friendId,eachSession.friendNickname,eachSession.unreadMsgCount,eachSession.friendAvatar,'online');
 					});
 					if(newSession!=null){
 						sessionId=newSession.attr('data-session-id');
@@ -424,7 +518,7 @@ $(document).ready(function(){
 	function initFriendList() {
 		$.ajax({
 			url: "http://"+host_domain+"/websocket/chat/api/getFriendList",
-			data: 'd={"loginSessionId":"' + loginSessionId + '","userId":'+ userId + '}',
+			data: 'd={"loginSessionId":"'+loginSessionId+'","userId":'+userId+'}',
 			dataType: "jsonp",
 			jsonpCallback: 'success_jsonpCallback_friends',
 			jsonp: 'cb',
@@ -435,7 +529,7 @@ $(document).ready(function(){
 				} else {
 					var friendList = jsonResult.data.friendList;
 					$.each(friendList,function(i,eachFriend){
-						add_friend(eachFriend.userId,eachFriend.userNickname,'images/demo/av1.jpg');
+						add_friend(eachFriend.userId,eachFriend.userNickname,eachFriend.avatar);
 					});
 				}
 			},
@@ -475,7 +569,7 @@ $(document).ready(function(){
 		clear_search_response_user();
 		var userList=data.userList;
 		$.each(userList,function(i,eachUser){
-			var img='images/demo/av1.jpg';
+			var img=eachUser.avatar;
 			var userLi='<li data-user-id="'+eachUser.userId+'"><a href="javascript:void(0);"><img alt="" src="'+img+'" /> <span>'+eachUser.userNickname+'</span></a><i class="icon-plus tip-left" title="加为好友"></i></li>';
 			$('.search-user-list').append(userLi);
 		});
@@ -507,23 +601,26 @@ $(document).ready(function(){
 			success: function(result) {
 				var jsonResult = eval(result);
 				if (jsonResult.success == false) {
+					$('.modal-backdrop').click();
 					swal({
 						title: "添加失败",
 						type: "error",
 						timer: 1000
 					});
 				} else {
-					$('.modal').hide();
+					$('.modal-backdrop').click();
 					swal({
 						title: "添加成功",
 						type: "success",
 						timer: 1000
 					});
-					add_friend(user.attr('data-user-id'),user.find('span').text(),'images/demo/av1.jpg');
+					add_friend(user.attr('data-user-id'),user.find('span').text(),user.find('img').attr('src'));
+					sendAddFriendMsg(userId,user.attr('data-user-id'));
 				}
 			},
 			error:function(XMLHttpRequest, textStatus, errorThrown){
 			}
 		});
 	});
+
 });
