@@ -3,11 +3,20 @@ package websocket.chat.user.controller;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import websocket.chat.BaseController;
 import websocket.chat.constant.Constant;
 import websocket.chat.user.service.UserService;
-import websocket.chat.user.vo.*;
+import websocket.chat.user.vo.AddFriendRequest;
+import websocket.chat.user.vo.DeleteFriendRequest;
+import websocket.chat.user.vo.FriendListRequest;
+import websocket.chat.user.vo.FriendListResponse;
+import websocket.chat.user.vo.SearchUserRequest;
+import websocket.chat.user.vo.UpdateUserInfoRequest;
+import websocket.chat.user.vo.UserInfoRequest;
+import websocket.chat.user.vo.UserListResponse;
+import websocket.chat.user.vo.UserVO;
 import websocket.chat.util.ApiResponse;
 import websocket.chat.util.JsonUtil;
 
@@ -113,21 +122,21 @@ public class UserController extends BaseController {
         return toJson(apiResponse, cb);
     }
 
-    @RequestMapping("api/updateUserInfo")
-    public String updateUserInfo(@Param("d") String d, @Param("cb") String cb) {
+    @RequestMapping(value = "api/updateUserInfo", method = RequestMethod.POST)
+    public String updateUserInfo(@Param("d") String d) {
         UpdateUserInfoRequest request = JsonUtil.safelyParseObject(d, UpdateUserInfoRequest.class);
         if (request == null) {
             ApiResponse apiResponse = ApiResponse.create(false, Constant.NULL_PARAM_MESSAGE, Constant.ERROR_CODE, null);
-            return toJson(apiResponse, cb);
+            return toJson(apiResponse);
         }
         if (!checkLogin(request.getLoginSessionId(), request.getUserId())) {
             ApiResponse apiResponse = ApiResponse.create(false, Constant.USER_NOT_LOGIN_MESSAGE, Constant.ERROR_CODE, null);
-            return toJson(apiResponse, cb);
+            return toJson(apiResponse);
         }
 
         userService.updateUserInfo(request.getUserId(), request.getUserName(), request.getUserNickname(), request.getPassword(),
                 request.getSex(), request.getSignature(), request.getAvatar());
         ApiResponse apiResponse = ApiResponse.create(true, Constant.SUCCESS_MESSAGE, Constant.SUCCESS_CODE, null);
-        return toJson(apiResponse, cb);
+        return toJson(apiResponse);
     }
 }

@@ -10,6 +10,7 @@ import websocket.chat.user.vo.FriendListResponse;
 import websocket.chat.user.vo.FriendVO;
 import websocket.chat.user.vo.UserListResponse;
 import websocket.chat.user.vo.UserVO;
+import websocket.chat.util.PhotoUtil;
 import websocket.chat.util.StringUtil;
 
 import java.util.ArrayList;
@@ -143,6 +144,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updateUserInfo(int userId, String userName, String userNickname, String password,
                               int sex, String signature, String avatar) {
-        return userDao.updateUserInfo(userId, userName, userNickname, password, sex, signature, avatar);
+        String finalAvatar = PhotoUtil.generatePhoto(avatar, userId);
+        return userDao.updateUserInfo(userId, userName, userNickname, password, sex, signature, finalAvatar);
     }
 }

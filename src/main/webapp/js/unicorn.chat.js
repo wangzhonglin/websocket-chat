@@ -98,6 +98,23 @@ $(document).ready(function(){
 		}
 	} checkCookies();
 
+	function updateCookie(signature,avatar){
+		var data=$.cookie('websocket_chat_data');
+		if(data==null){
+			location.href = "index.html";
+		}
+		var jsonData = JSON.parse(data);
+		if(jsonData==null||jsonData==''){
+			location.href = "index.html";
+		}else{
+			jsonData.name=userName;
+			jsonData.nickname=userNickname;
+			jsonData.avatar=avatar;
+			jsonData.signature=signature;
+			$.cookie('websocket_chat_data',JSON.stringify(jsonData));
+		}
+	}
+
 	function constructMsg(method,request) {
 		return {
 			method:method,
@@ -485,6 +502,32 @@ $(document).ready(function(){
 			}
 		});
 	});
+	$('#opt-update-btn').on('click',function(){
+		userNickname=$('#opt-user-nickname').val();
+		userName=userNickname;
+		var password=$('#opt-user-password').val();
+		var sex=$('#opt-user-female').parent().hasClass('checked')?0:1;
+		var signature=$('#opt-user-signature').val();
+		var originAvatar=$('#opt-cropped-avatar').attr('src');
+		var avatar=originAvatar.substring(22,originAvatar.length);
+		$('#login-user-nickname').html(userNickname);
+		$('#login-user-img').attr('src',originAvatar);
+		$('#login-user-signature').text('个性签名：'+signature);
+		updateCookie(signature,originAvatar);
+		$.ajax({
+			type: 'POST',
+			url: "http://127.0.0.1:8080/websocket/chat/api/updateUserInfo",
+			dataType: 'json',
+			data: {
+				d: '{"loginSessionId":"'+loginSessionId+'","userId":'+userId+',"userName":"'+userNickname+'","userNickname":"'+userNickname+
+				'","password":"'+password+'","sex":'+sex+',"signature":"'+signature+'","avatar":"'+avatar+'"}'
+			},
+			success: function(result) {
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown){
+			}
+		});
+	});
 
 	function initSessionList() {
 		$.ajax({
@@ -623,20 +666,22 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#clipArea").photoClip({
-		size: [180, 180],
-		outputSize: [640, 640],
-		file: "#opt-user-avatar",
-		view: "#view",
-		ok: "#clipBtn",
-		loadStart: function() {
-			console.log("照片读取中");
-		},
-		loadComplete: function() {
-			console.log("照片读取完成");
-		},
-		clipFinish: function(dataURL) {
-			console.log(dataURL);
-		}
-	});
+	angular.module('app', ['ngImgCrop'])
+		.controller('Ctrl', function($scope) {
+			$scope.myImage='';
+			$scope.myCroppedImage='';
+
+			var handleFileSelect=function(evt) {
+				var file=evt.currentTarget.files[0];
+				var reader = new FileReader();
+				reader.onload = function (evt) {
+					$scope.$apply(function($scope){
+						$scope.myImage=evt.target.result;
+					});
+				};
+				reader.readAsDataURL(file);
+			};
+			angular.element(document.querySelector('#opt-user-avatar')).on('change',handleFileSelect);
+		});
+
 });

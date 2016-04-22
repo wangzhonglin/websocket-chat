@@ -10,10 +10,23 @@
 		<link rel="stylesheet" href="css/unicorn.main.css" />
 		<link rel="stylesheet" href="css/uniform.css" />
 		<link rel="stylesheet" href="css/unicorn.grey.css" class="skin-color" />
+		<link rel="stylesheet" type="text/css" href="css/ng-img-crop.css">
+
+		<script type="text/javascript" src="js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery.ui.custom.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/unicorn.js"></script>
+		<script type="text/javascript" src="js/unicorn.chat.js"></script>
+		<script type="text/javascript" src="js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="js/jquery.uniform.js"></script>
+		<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="js/unicorn.tables.js"></script>
+		<script type="text/javascript" src="js/angular.js"></script>
+		<script type="text/javascript" src="js/ng-img-crop.js"></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
-	<body>
-		
-		
+	<body ng-app="app" ng-controller="Ctrl">
+
 		<div id="header">
 			<h1><a href="javascript:void(0);">UniAdmin</a></h1>
 		</div>
@@ -67,10 +80,12 @@
 								<div class="control-group">
 									<label class="control-label">头 像 上 传</label>
 									<div class="controls">
-										<div id="clipArea" style="margin: 20px;height: 200px;"></div>
-										<input id="opt-user-avatar" type="file" />
-										<button id="clipBtn" style="margin: 20px;">截取</button>
-										<div id="view" style="margin: 0 auto;width: 200px;height: 200px;"></div>
+										<div><input type="file" id="opt-user-avatar" /></div>
+										<div class="cropArea">
+											<img-crop image="myImage" result-image="myCroppedImage" area-type="square" result-image-size="180"></img-crop>
+										</div>
+										<div>预览:</div>
+										<div><img ng-src="{{myCroppedImage}}" id="opt-cropped-avatar" /></div>
 									</div>
 								</div>
 							</form>
@@ -79,7 +94,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a data-dismiss="modal" id="opt-update-btn" class="btn btn-primary">确定更新</a>
+				<a data-dismiss="modal" id="opt-update-btn" class="btn btn-primary">更新</a>
 				<a data-dismiss="modal" class="btn">取消</a>
 			</div>
 		</div>
@@ -181,20 +196,5 @@
 			</div>
 		</div>
 
-		<script type="text/javascript" src="js/sweet-alert.min.js"></script>
-		<script type="text/javascript" src="js/jquery.min.js"></script>
-		<script type="text/javascript" src="js/jquery.ui.custom.js"></script>
-		<script type="text/javascript" src="js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="js/unicorn.js"></script>
-		<script type="text/javascript" src="js/unicorn.chat.js"></script>
-		<script type="text/javascript" src="js/jquery.cookie.js"></script>
-		<script type="text/javascript" src="js/jquery.uniform.js"></script>
-		<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-		<script type="text/javascript" src="js/unicorn.tables.js"></script>
-		<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="js/hammer.js"></script>
-		<script type="text/javascript" src="js/iscroll-zoom.js"></script>
-		<script type="text/javascript" src="js/jquery.photoClip.js"></script>
-		<script type="text/javascript" src="js/lrz.all.bundle.js"></script>
 	</body>
 </html>

@@ -9,6 +9,7 @@ import websocket.chat.constant.Constant;
 import websocket.chat.login.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 基本控制器
@@ -26,6 +27,12 @@ public class BaseController {
         ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes();
         return attrs.getRequest();
+    }
+
+    public static HttpServletResponse getResponse() {
+        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes();
+        return attrs.getResponse();
     }
 
     protected static String toJson(Object object) {
