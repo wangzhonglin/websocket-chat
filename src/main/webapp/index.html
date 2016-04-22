@@ -9,6 +9,7 @@
     <script type="text/javascript" src="js/sweet-alert.min.js"></script>
     <script type="text/javascript" src="js/login.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
     <link rel="stylesheet" href="css/unicorn.login.css" />
@@ -34,7 +35,7 @@
         <div class="web_login" id="web_login">
 			<div class="login-box">
 			<div class="login_form">
-				<form name="loginform" accept-charset="utf-8" id="login_form" class="loginForm"><input type="hidden" name="did" value="0"/>
+				<form name="loginform" accept-charset="utf-8" id="login_form" class="loginForm" novalidate="novalidate"><input type="hidden" name="did" value="0"/>
 					<input type="hidden" name="to" value="log"/>
                     <div class="control-group">
                         <div class="controls">
@@ -66,7 +67,7 @@
     <div class="web_login" style="height: 220px">
         <div class="login-box">
             <div class="login_form">
-                <form name="form2" id="regUser" accept-charset="utf-8">
+                <form name="form2" id="regUser" accept-charset="utf-8" novalidate="novalidate">
                     <ul class="reg_form" id="reg-ul">
                         <div id="userCue" class="cue">快速注册请注意格式</div>
                         <li>

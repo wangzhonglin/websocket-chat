@@ -503,6 +503,7 @@ $(document).ready(function(){
 		});
 	});
 	$('#opt-update-btn').on('click',function(){
+		$('#user-info-form').submit();
 		userNickname=$('#opt-user-nickname').val();
 		userName=userNickname;
 		var password=$('#opt-user-password').val();
@@ -510,6 +511,7 @@ $(document).ready(function(){
 		var signature=$('#opt-user-signature').val();
 		var originAvatar=$('#opt-cropped-avatar').attr('src');
 		var avatar=originAvatar.substring(22,originAvatar.length);
+		if(password.length<6||userNickname.length<4){return false;}
 		$('#login-user-nickname').html(userNickname);
 		$('#login-user-img').attr('src',originAvatar);
 		$('#login-user-signature').text('个性签名：'+signature);
@@ -684,4 +686,28 @@ $(document).ready(function(){
 			angular.element(document.querySelector('#opt-user-avatar')).on('change',handleFileSelect);
 		});
 
+	$('.form-horizontal').validate({
+		rules:{
+			pwd:{
+				required: true,
+				minlength:6,
+				maxlength:16
+			},
+			nickname:{
+				required: true,
+				minlength:1,
+				maxlength:16
+			}
+		},
+		errorClass: "help-inline",
+		errorElement: "span",
+		highlight:function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('success');
+			$(element).parents('.control-group').addClass('error');
+		},
+		unhighlight: function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('error');
+			$(element).parents('.control-group').addClass('success');
+		}
+	});
 });

@@ -125,10 +125,10 @@ $(document).ready(function() {
 			return false;
 		}
 
-		if ($('#reg_username').val().length < 4 || $('#reg_username').val().length > 16) {
+		if ($('#reg_username').val().length < 1 || $('#reg_username').val().length > 16) {
 
 			$('#reg_username').focus();
-			$('#userCue').html("<font color='red'><b>×昵称为4-16字符</b></font>");
+			$('#userCue').html("<font color='red'><b>×昵称为1-16字符</b></font>");
 			return false;
 
 		}
@@ -177,6 +177,72 @@ $(document).ready(function() {
             }
 		});
 
+	});
+
+	$('#login_form').validate({
+		rules:{
+			login_userId:{
+				required: true,
+				minlength:1,
+				maxlength:16
+			},
+			login_password:{
+				required: true,
+				minlength: 6,
+				maxlength: 16
+			}
+		},
+		errorClass: "help-inline",
+		errorElement: "span",
+		highlight:function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('success');
+			$(element).parents('.control-group').addClass('error');
+		},
+		unhighlight: function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('error');
+			$(element).parents('.control-group').addClass('success');
+		}
+	});
+
+	$('#regUser').validate({
+		rules:{
+			login_userId:{
+				required: true,
+				minlength:1,
+				maxlength:16
+			},
+			login_password:{
+				required: true,
+				minlength: 6,
+				maxlength: 16
+			},
+			reg_username:{
+				required: true,
+				minlength: 1,
+				maxlength: 16
+			},
+			reg_passwd:{
+				required: true,
+				minlength: 6,
+				maxlength: 16
+			},
+			reg_passwd2:{
+				required: true,
+				minlength: 6,
+				maxlength: 16,
+				equalTo: "#reg_passwd"
+			}
+		},
+		errorClass: "help-inline",
+		errorElement: "span",
+		highlight:function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('success');
+			$(element).parents('.control-group').addClass('error');
+		},
+		unhighlight: function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('error');
+			$(element).parents('.control-group').addClass('success');
+		}
 	});
 
 });
