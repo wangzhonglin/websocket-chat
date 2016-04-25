@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int addFriend(int senderUserId, int receiverUserId) {
-        if (senderUserId <= 0 || receiverUserId <=0 ) {
+        if (senderUserId <= 0 || receiverUserId <=0 || senderUserId == receiverUserId) {
             return 0;
         }
         UserVO senderUser = userDao.getUserById(receiverUserId);
