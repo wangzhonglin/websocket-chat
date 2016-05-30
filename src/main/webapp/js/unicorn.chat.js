@@ -615,7 +615,12 @@ $(document).ready(function(){
 		var userList=data.userList;
 		$.each(userList,function(i,eachUser){
 			var img=eachUser.avatar;
-			var userLi='<li data-user-id="'+eachUser.userId+'"><a href="javascript:void(0);"><img alt="" src="'+img+'" /> <span>'+eachUser.userNickname+'</span></a><i class="icon-plus tip-left" title="加为好友"></i></li>';
+			var originSignature=eachUser.signature;
+			var userLi;
+			if(originSignature==''){}
+			else{originSignature='个性签名：'+originSignature;}
+			userLi='<li data-user-id="' + eachUser.userId + '"><div class="search-padding-left"><img alt="" src="' + img + '" /></div>' +
+				'<div class="search-padding-right"><span>' + eachUser.userNickname + '</span><p title="' + originSignature + '">' + originSignature + '</p><i class="icon-plus tip-left" title="加为好友"></i></div></li>';
 			$('.search-user-list').append(userLi);
 		});
 	}
