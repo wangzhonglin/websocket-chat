@@ -641,7 +641,7 @@ $(document).ready(function(){
 	});
 
 	$('.search-user-list').on('click','i',function () {
-		var user=$(this).parent();
+		var user=$(this).parent().parent();
 		$.ajax({
 			url: "http://"+host_domain+"/websocket/chat/api/addFriend",
 			data: 'd={"loginSessionId":"'+loginSessionId+'","senderUserId":'+userId+',"receiverUserId":"'+user.attr('data-user-id')+'"}',
